@@ -4,9 +4,8 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ip = require('ip').address();
 var sentenceService = require('./sentence-service');
+var clientsService = require('./clients-service');
 
-var clients = [];
-var connectedClients = {};
 
 app.use(express.static(__dirname + '/../client'));
 app.use('/public', express.static(__dirname + '/../public'));
@@ -25,7 +24,7 @@ app.get('/ip', function(req, res) {
 });
 
 app.get('/clients', function(req, res) {
-    res.json(connectedClients);
+    res.json(clientsService.clients());
 });
 
 server = http.listen(3000, function() {
@@ -40,36 +39,28 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function() {
         console.log('User disconnected');
-        removeClient(socket);
+        clientsService.remove(socket);
     });
 
     socket.on('new-player', function(playerName) {
-        addClient(playerName, socket);
+        clientsService.add(playerName, socket);
         socket.emit('loginEvent', createLoggedInEvent(playerName));
     });
 
     socket.on('findMatch', function() {
         console.log("findMatch");
-        var sourceClient = connectedClients[socket.id];
-        var opponent;
+        var sourceClient = clientsService.getById(socket.id);
 
-        Object.keys(connectedClients).forEach(function(clientId) {
-            var client = connectedClients[clientId];
-            if (client.status === "findingMatch") {
-                opponent = client;
-            }
-        });
-
+        var opponent = clientsService.getWaitingClient();
         if (opponent) {
             startBout(socket.id, opponent.id);
         }
         else {
-            if (sourceClient) {
-                sourceClient.status = "findingMatch";
-            }
+            console.log("About to call clientsService.setStatusById, " + socket.id);
+            clientsService.setStatusById(socket.id, "findingMatch");
         }
 
-        console.log(connectedClients);
+        console.log("findMatch end");
     });
 });
 
@@ -81,21 +72,6 @@ function createLoggedInEvent(playerName) {
             rank: 1
         }
     };
-}
-
-function addClient(playerName, socket) {
-    var client = {
-        name: playerName,
-        id: socket.id
-    };
-
-    connectedClients[socket.id] = client;
-    console.log(connectedClients);
-}
-
-function removeClient(socket) {
-    delete connectedClients[socket.id];
-    console.log(connectedClients);
 }
 
 function startBout(player1Id, player2Id) {
@@ -117,8 +93,6 @@ function startBout(player1Id, player2Id) {
 
     io.sockets.connected[player1Id].emit('boutStarted', player1Msg);
     io.sockets.connected[player2Id].emit('boutStarted', player2Msg);
-
-    console.log(connectedClients);
 }
 
 function createBoutId() {
