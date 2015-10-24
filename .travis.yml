@@ -1,13 +1,14 @@
 language: node_js
+
 node_js:
-- 0.1
+  - 0.12
+
 before_deploy:
-- gulp build-client
-- zip -r revision *
-- mkdir -p uploads
-- mv revision.zip uploads/revision.zip
+  - gulp build-client
+  - zip -r revision *
+  - mkdir -p uploads
+  - mv revision.zip uploads/revision.zip
 deploy:
-  matrix:
   - provider: s3
     access_key_id: AKIAIKPGQSIBKZSYRAKQ
     secret_access_key:
