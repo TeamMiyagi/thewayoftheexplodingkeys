@@ -78,23 +78,26 @@ function createLoggedInEvent(playerName) {
 
 function startBout(player1Id, player2Id) {
     console.log("startBout");
+    var player1 = clientsService.getById(player1Id);
+    var player2 = clientsService.getById(player2Id);
 
     var bout = {
         id: createBoutId(),
-        player1Id: player1Id,
-        player2Id: player2Id,
+        player1: player1,
+        player2: player2,
         sentence: sentenceService.get()
     };
 
     var player1Msg = bout;
     var player2Msg = {
         id: bout.id,
-        player1Id: bout.player2Id,
-        player2Id: bout.player1Id
+        player1: bout.player2,
+        player2: bout.player1,
+        sentence: bout.sentence
     };
 
-    io.sockets.connected[player1Id].emit('boutStarted', player1Msg);
-    io.sockets.connected[player2Id].emit('boutStarted', player2Msg);
+    io.sockets.connected[player1.id].emit('boutStarted', player1Msg);
+    io.sockets.connected[player2.id].emit('boutStarted', player2Msg);
 }
 
 function createBoutId() {
