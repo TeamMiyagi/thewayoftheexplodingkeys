@@ -4,6 +4,8 @@ $(document).ready(function() {
     });
 });
 
+var Game = require('./game.js');
+
 function run(ip) {
     var socket = io('http://' + ip +':3000');
 
@@ -38,5 +40,6 @@ function run(ip) {
 
         $('#findingMatch').hide();
         $('#game').show();
+        var game = new Game(boutStartedEvent);
     });
 }
