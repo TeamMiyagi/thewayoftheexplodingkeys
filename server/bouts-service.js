@@ -35,7 +35,6 @@ function updateBout(socketId, roundCompleteMsg) {
         return;
     }
 
-    console.log("Updating bout: " + JSON.stringify(bout));
     console.log(socketId);
 
     if (bout.player1.id === socketId) {
@@ -49,6 +48,8 @@ function updateBout(socketId, roundCompleteMsg) {
     else {
         console.log("Ouch, no idea who just completed a bout");
     }
+
+    console.log("Updated bout: " + JSON.stringify(bout));
 }
 
 function getRoundStatus(boutId) {

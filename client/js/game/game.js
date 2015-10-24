@@ -9,7 +9,7 @@ var player2;
 var sentence;
 
 var sentenceChars;
-
+var startOfRoundMs;
 
 
 var Game = function(boutInfo, socketInfo) {
@@ -55,6 +55,7 @@ function create() {
     player2.animations.play('ready');
 
     sentenceChars = bout.sentence.split('');
+    startOfRoundMs = Date.now();
 
     sentence = game.add.text(0, 150, bout.sentence, { fill: '#fff', align: 'center', boundsAlignH: 'center' });
     sentence.setTextBounds(0, 0, 800, 600);
@@ -72,7 +73,7 @@ function update() {
         if(!sentenceChars.length) {
             socket.emit('roundComplete', {
                 id: bout.id,
-                duration: Math.random() * 1000
+                duration: Date.now() - startOfRoundMs
             });
         }
     };
