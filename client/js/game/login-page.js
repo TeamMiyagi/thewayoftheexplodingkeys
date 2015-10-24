@@ -38,6 +38,7 @@ function run(ip) {
     socket.on('boutStarted', function(boutStartedEvent) {
         console.log(boutStartedEvent);
 
+        $('header').hide();
         $('#findingMatch').hide();
         $('#game').show();
         var game = new Game(boutStartedEvent);
