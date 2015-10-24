@@ -30,7 +30,7 @@ function removeClient(socket) {
 }
 
 function getClientById(id) {
-    var client = connectedClients[id];
+    return connectedClients[id];
 }
 
 function setClientStatusById(id, status) {
