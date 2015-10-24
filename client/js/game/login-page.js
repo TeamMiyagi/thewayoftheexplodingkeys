@@ -38,9 +38,11 @@ function run(ip) {
     socket.on('boutStarted', function(boutStartedEvent) {
         console.log(boutStartedEvent);
 
-        $('header').hide();
-        $('#findingMatch').hide();
-        $('#game').show();
+        $('header').fadeOut();
+        $('#findingMatch').fadeOut(400, function() {
+            $('#game').fadeIn();
+        });
+
         var game = new Game(boutStartedEvent, socket);
     });
 }

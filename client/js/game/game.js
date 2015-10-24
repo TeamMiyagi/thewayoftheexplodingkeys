@@ -31,14 +31,17 @@ var Game = function(boutInfo, socketInfo) {
 function preload() {
     console.log("boutInfo: ", bout);
     game.load.spritesheet('player', 'assets/images/sprites/player-idle.png', 49, 52, 4);
+    game.load.image("background", "assets/images/sprites/game-dojo.jpg", 0, 0, 800, 600);
 }
 
 function create() {
     game.stage.backgroundColor = 0xaaaaaa;
+    game.add.tileSprite(0, 0, 800, 600, 'background');
+
     $('canvas').addClass('game center-block');
 
-    player1Text = game.add.text(0, 0, bout.player1.name, {});
-    player2Text = game.add.text(0, 0, bout.player2.name, { align: 'right', boundsAlignH: 'right' });
+    player1Text = game.add.text(0, 0, bout.player1.name, { fill: '#fff' });
+    player2Text = game.add.text(0, 0, bout.player2.name, { fill: '#fff', align: 'right', boundsAlignH: 'right' });
     player2Text.setTextBounds(0, 0, 800, 600);
 
     player1 = game.add.sprite(0, 300, 'player');
@@ -53,7 +56,7 @@ function create() {
 
     sentenceChars = bout.sentence.split('');
 
-    sentence = game.add.text(0, 150, bout.sentence, { align: 'center', boundsAlignH: 'center' });
+    sentence = game.add.text(0, 150, bout.sentence, { fill: '#fff', align: 'center', boundsAlignH: 'center' });
     sentence.setTextBounds(0, 0, 800, 600);
 }
 
@@ -64,8 +67,6 @@ function update() {
         }
 
         if(!sentenceChars.length) {
-            console.log('round Complete!');
-
             socket.emit('roundComplete', {
                 id: bout.id,
                 duration: Math.random() * 1000
