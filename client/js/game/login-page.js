@@ -9,6 +9,8 @@ function run(ip) {
 
     $('#game').hide();
     $('#startGameDiv').hide();
+    $('#findingMatch').hide();
+
     $('#createPlayerButton').on('click', function(e) {
         var playerName = $('#welcomeDiv input').val();
         socket.emit('new-player', playerName);
@@ -22,6 +24,9 @@ function run(ip) {
     $('#startGameButton').on('click', function(e) {
         console.log("Game Started");
         socket.emit('findMatch');
+
+        $('#startGameDiv').hide();
+        $('#findingMatch').show();
     });
 
     socket.on('loginEvent', function(loginEvent) {
@@ -30,5 +35,8 @@ function run(ip) {
 
     socket.on('boutStarted', function(boutStartedEvent) {
         console.log(boutStartedEvent);
+
+        $('#findingMatch').hide();
+        $('#game').show();
     });
 }

@@ -31,3 +31,21 @@ input {
 .start-game {
     margin-top: 20px;
 }
+
+.spinner {
+    margin-top: 40px;
+    width: 100px;
+    height: 100px;
+    background: url(../assets/images/sprites/spinner.png) no-repeat;
+    animation: spin 3s linear infinite;
+    background-size: 100px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
