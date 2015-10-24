@@ -15,10 +15,15 @@ $(document).ready(function() {
 
     $('#startGameButton').on('click', function(e) {
         console.log("Game Started");
+        socket.emit('findMatch');
     });
 
     socket.on('loginEvent', function(loginEvent) {
         console.log(loginEvent);
-    })
+    });
+
+    socket.on('boutStarted', function(boutStartedEvent) {
+        console.log(boutStartedEvent);
+    });
 
 });

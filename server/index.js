@@ -12,7 +12,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/clients', function(req, res) {
-    res.send(connectedClients);
+    res.json(connectedClients);
 });
 
 server = http.listen(3000, function() {
@@ -33,7 +33,31 @@ io.on('connection', function (socket) {
     socket.on('new-player', function(playerName) {
         addClient(playerName, socket);
         socket.emit('loginEvent', createLoggedInEvent(playerName));
-    })
+    });
+
+    socket.on('findMatch', function() {
+        console.log("findMatch");
+        var sourceClient = connectedClients[socket.id];
+        var opponent;
+
+        Object.keys(connectedClients).forEach(function(clientId) {
+            var client = connectedClients[clientId];
+            if (client.status === "findingMatch") {
+                opponent = client;
+            }
+        });
+
+        if (opponent) {
+            startBout(socket.id, opponent.id);
+        }
+        else {
+            if (sourceClient) {
+                sourceClient.status = "findingMatch";
+            }
+        }
+
+        console.log(connectedClients);
+    });
 });
 
 function createLoggedInEvent(playerName) {
@@ -43,14 +67,15 @@ function createLoggedInEvent(playerName) {
             name: playerName,
             rank: 1
         }
-    }
+    };
 }
 
 function addClient(playerName, socket) {
     var client = {
         name: playerName,
         id: socket.id
-    }
+    };
+
     connectedClients[socket.id] = client;
     console.log(connectedClients);
 }
@@ -58,4 +83,30 @@ function addClient(playerName, socket) {
 function removeClient(socket) {
     delete connectedClients[socket.id];
     console.log(connectedClients);
+}
+
+function startBout(player1Id, player2Id) {
+    console.log("startBout");
+
+    var bout = {
+        id: createBoutId(),
+        player1Id: player1Id,
+        player2Id: player2Id,
+    };
+
+    var player1Msg = bout;
+    var player2Msg = {
+        id: bout.id,
+        player1Id: bout.player2Id,
+        player2Id: bout.player1Id
+    };
+
+    io.sockets.connected[player1Id].emit('boutStarted', player1Msg);
+    io.sockets.connected[player2Id].emit('boutStarted', player2Msg);
+
+    console.log(connectedClients);
+}
+
+function createBoutId() {
+    return "qwerty1234";
 }
