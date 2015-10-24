@@ -1,2 +1,2 @@
 #!/bin/bash
-pm2 stop /home/ec2-user/workspace/app/index.js
+pm2 stop /home/ec2-user/workspace/twotek/server/index.js
