@@ -65,6 +65,20 @@ io.on('connection', function (socket) {
 
         console.log("findMatch end");
     });
+
+    socket.on('roundComplete', function(roundCompleteMsg) {
+        console.log('roundComplete: ' + roundCompleteMsg);
+        boutsService.update(socket.id, roundCompleteMsg);
+
+        var roundStatus = boutsService.getRoundStatus(roundCompleteMsg.id);
+        if (roundStatus.isComplete) {
+            console.log('Round complete!');
+            var bout = boutsService.get(roundCompleteMsg.id);
+
+            io.sockets.connected[bout.player1.id].emit('roundResult', roundStatus.player1Won);
+            io.sockets.connected[bout.player2.id].emit('roundResult', roundStatus.player2Won);
+        }
+    });
 });
 
 function createLoggedInEvent(playerName) {
