@@ -1,10 +1,10 @@
 $(document).ready(function() {
-    var socket;
+    var socket = io();
+
     $('#game').hide();
     $('#startGameDiv').hide();
     $('#createPlayerButton').on('click', function(e) {
         var playerName = $('#welcomeDiv input').val();
-        socket = io();
         socket.emit('new-player', playerName);
 
         $('#welcomeDiv').hide();    // TODO: use class
@@ -16,4 +16,9 @@ $(document).ready(function() {
     $('#startGameButton').on('click', function(e) {
         console.log("Game Started");
     });
+
+    socket.on('loginEvent', function(loginEvent) {
+        console.log(loginEvent);
+    })
+
 });

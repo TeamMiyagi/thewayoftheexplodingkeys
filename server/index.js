@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var clients = [];
 
 app.use(express.static(__dirname + '/../client'));
 app.use('/public', express.static(__dirname + '/../public'));
@@ -16,6 +17,7 @@ server = http.listen(3000, function() {
     console.log('TWOTEK app is listening at %s', port);
 });
 
+
 io.on('connection', function (socket) {
   console.log('User connected');
 
@@ -25,5 +27,12 @@ io.on('connection', function (socket) {
 
   socket.on('new-player', function(playerName) {
       console.log('The name of player: ' + socket.id + ' is ' + playerName);
+      socket.emit('loginEvent', createLoggedInEvent());
   })
 });
+
+function createLoggedInEvent() {
+    return {
+        type: 'loggedIn'
+    }
+}
