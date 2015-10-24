@@ -56,11 +56,3 @@ function startGame() {
     $('#playerName').text(playerName);
     $('#startGameDiv').show();
 }
-
-// Sent when the player has completed the word
-function completeRound(, boutId, durationMs) {
-    socket.emit('roundComplete', {
-        id: boutId,
-        duration: duration
-    });
-}

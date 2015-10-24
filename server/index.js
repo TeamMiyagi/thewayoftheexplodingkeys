@@ -66,7 +66,8 @@ io.on('connection', function (socket) {
         console.log("findMatch end");
     });
 
-    sock.on('roundComplete', function(socket, roundCompleteMsg) {
+    socket.on('roundComplete', function(roundCompleteMsg) {
+        console.log('roundComplete: ' + roundCompleteMsg);
         boutsService.updateBout(socket.id, roundCompleteMsg);
     });
 });

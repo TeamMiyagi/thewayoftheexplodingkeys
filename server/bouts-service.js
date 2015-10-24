@@ -27,22 +27,24 @@ function createBoutId() {
 }
 
 function updateBout(socketId, roundCompleteMsg) {
+    console.log('updateBout: ' + roundCompleteMsg);
+
     var bout = bouts[roundCompleteMsg.id];
     if (!bout) {
         console.log("Failed to find bout to update");
         return;
     }
 
-    console.log("Updating bout: " + bout);
+    console.log("Updating bout: " + JSON.stringify(bout));
+    console.log(socketId);
 
-    // which player?
     if (bout.player1.id === socketId) {
-        bout.player1Duration = roundComplete.duration;
-        console.log("player1 duration set")
+        bout.player1Duration = roundCompleteMsg.duration;
+        console.log("player1 duration set");
     }
-    else if (bout.player1.id === socketId) {
-        bout.player1Duration = roundComplete.duration;
-        console.log("player2 duration set")
+    else if (bout.player2.id === socketId) {
+        bout.player2Duration = roundCompleteMsg.duration;
+        console.log("player2 duration set");
     }
     else {
         console.log("Ouch, no idea who just completed a bout");
