@@ -1,0 +1,38 @@
+{
+  "name": "twotek",
+  "version": "0.1.0",
+  "description": "The Way of the Exploding Keys",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Everything is working fine!\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeamMiyagi/thewayoftheexplodingkeys.git"
+  },
+  "keywords": [
+    "twotek",
+    "keys",
+    "exploding",
+    "game",
+    "multiplayer",
+    "martial",
+    "arts"
+  ],
+  "author": "TeamMiyagi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TeamMiyagi/thewayoftheexplodingkeys/issues"
+  },
+  "homepage": "https://github.com/TeamMiyagi/thewayoftheexplodingkeys#readme",
+  "dependencies": {
+    "babel": "^5.8.23",
+    "babelify": "^6.4.0",
+    "browserify": "^11.2.0",
+    "express": "^4.13.3",
+    "gulp": "^3.9.0",
+    "gulp-uglify": "^1.4.2",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "devDependencies": {}
+}
