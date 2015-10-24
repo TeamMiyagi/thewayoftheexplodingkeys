@@ -17,11 +17,12 @@ gulp.task('copy-client', function() {
         .pipe(gulp.dest('./public/assets/'));
 })
 
-gulp.task('build-client', ['copy-client'], function() {    
+gulp.task('build-client', ['copy-client'], function() {
     var b = browserify();
 
     b.transform(babelify);
     b.add('client/js/game/game.js');
+    b.add('client/js/game/login-page.js');
     return b.bundle()
             .pipe(source('main.min.js'))
             .pipe(gulp.dest('./public/js/'));
