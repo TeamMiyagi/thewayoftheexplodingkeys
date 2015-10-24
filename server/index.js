@@ -17,7 +17,7 @@ app.get('/ip', function(req, res) {
     var env = process.env.NODE_ENV;
     var ipToReturn = ip;
     if (!env || env !== 'local') {
-        return '52.17.219.89';
+        ipToReturn = '52.17.219.89';
     }
     return res.send({ip: ipToReturn});
 });
