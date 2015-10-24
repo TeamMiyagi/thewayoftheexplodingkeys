@@ -14,7 +14,12 @@ app.get('/', function(req, res) {
 });
 
 app.get('/ip', function(req, res) {
-    res.send({ip: ip});
+    var env = process.env.NODE_ENV;
+    var ipToReturn = ip;
+    if (!env || env !== 'local') {
+        return '52.17.219.89';
+    }
+    return res.send({ip: ipToReturn});
 });
 
 app.get('/clients', function(req, res) {
