@@ -4,6 +4,7 @@ var source = require('vinyl-source-stream');
 var babelify = require('babelify');
 var babel = require('babel/register');
 var uglify = require('gulp-uglify');
+var jshint = require('gulp-jshint');
 
 var paths = {
     client: ['client/js/game/*.js']
@@ -22,7 +23,17 @@ gulp.task('css', function() {
         .pipe(gulp.dest('./public/css'));
 })
 
-gulp.task('build-client', ['copy-client', 'css'], function() {
+gulp.task('jshint', function() {
+    gulp.src('./server/**/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+
+    gulp.src('./client/js/game/**/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+})
+
+gulp.task('build-client', ['jshint', 'copy-client', 'css'], function() {
     var b = browserify();
 
     b.transform(babelify);
