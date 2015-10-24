@@ -1,4 +1,4 @@
-# The Way of the Exploding Keys
+# The Way of the Exploding Keys [![Build Status](https://travis-ci.org/TeamMiyagi/thewayoftheexplodingkeys.svg)](https://travis-ci.org/TeamMiyagi/thewayoftheexplodingkeys)
 
 > "Man who catch fly with chopstick accomplish anything."
 
