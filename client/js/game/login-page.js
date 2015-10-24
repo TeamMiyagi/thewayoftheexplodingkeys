@@ -5,6 +5,7 @@ $(document).ready(function() {
 });
 
 var Game = require('./game.js');
+var boutId;
 
 var socket;
 
@@ -37,6 +38,7 @@ function run(ip) {
 
     socket.on('boutStarted', function(boutStartedEvent) {
         console.log(boutStartedEvent);
+        boutId = boutStartedEvent.id;
 
         $('#findingMatch').hide();
         $('#game').show();
@@ -52,4 +54,12 @@ function startGame() {
 
     $('#playerName').text(playerName);
     $('#startGameDiv').show();
+}
+
+// Sent when the player has completed the word
+function completeRound(, boutId, durationMs) {
+    socket.emit('roundComplete', {
+        id: boutId,
+        duration: duration
+    });
 }
