@@ -3,6 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ip = require('ip').address();
+var sentenceService = require('./sentence-service');
+
 var clients = [];
 var connectedClients = {};
 
@@ -103,7 +105,7 @@ function startBout(player1Id, player2Id) {
         id: createBoutId(),
         player1Id: player1Id,
         player2Id: player2Id,
-        sentence: getSentence()
+        sentence: sentenceService.get()
     };
 
     var player1Msg = bout;
@@ -124,8 +126,4 @@ function createBoutId() {
         var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
         return v.toString(16);
     });
-}
-
-function getSentence() {
-    return "I am Spartacus";
 }
