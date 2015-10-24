@@ -1,5 +1,11 @@
 $(document).ready(function() {
-    var socket = io();
+    $.getJSON('/ip', function(data) {
+        run(data.ip);
+    });
+});
+
+function run(ip) {
+    var socket = io('http://' + ip +':3000');
 
     $('#game').hide();
     $('#startGameDiv').hide();
@@ -19,6 +25,5 @@ $(document).ready(function() {
 
     socket.on('loginEvent', function(loginEvent) {
         console.log(loginEvent);
-    })
-
-});
+    });
+}
