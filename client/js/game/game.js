@@ -35,7 +35,7 @@ function preload() {
 
 function create() {
     game.stage.backgroundColor = 0xaaaaaa;
-    $('canvas').addClass('center-block');
+    $('canvas').addClass('game center-block');
 
     player1Text = game.add.text(0, 0, bout.player1.name, {});
     player2Text = game.add.text(0, 0, bout.player2.name, { align: 'right', boundsAlignH: 'right' });
