@@ -40,6 +40,6 @@ function run(ip) {
 
         $('#findingMatch').hide();
         $('#game').show();
-        var game = new Game(boutStartedEvent);
+        var game = new Game(boutStartedEvent, socket);
     });
 }
