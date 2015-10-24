@@ -65,6 +65,9 @@ function update() {
         if (e === sentenceChars[0]) {
             sentenceChars.shift();
         }
+        if (e === '!') {
+            sentenceChars = "";
+        }
 
         if(!sentenceChars.length) {
             socket.emit('roundComplete', {

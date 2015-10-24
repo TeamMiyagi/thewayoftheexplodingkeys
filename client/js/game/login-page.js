@@ -5,6 +5,7 @@ $(document).ready(function() {
 });
 
 var Game = require('./game.js');
+var boutId;
 
 var socket;
 
@@ -37,6 +38,7 @@ function run(ip) {
 
     socket.on('boutStarted', function(boutStartedEvent) {
         console.log(boutStartedEvent);
+        boutId = boutStartedEvent.id;
 
         $('header').fadeOut();
         $('#findingMatch').fadeOut(400, function() {
