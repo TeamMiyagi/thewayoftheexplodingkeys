@@ -53,6 +53,8 @@ io.on('connection', function (socket) {
 
         var opponent = clientsService.getWaitingClient();
         if (opponent) {
+            clientsService.setStatusById(socket.id, "fighting");
+            clientsService.setStatusById(opponent.id, "fighting");
             startBout(socket.id, opponent.id);
         }
         else {

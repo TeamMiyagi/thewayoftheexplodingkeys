@@ -33,10 +33,10 @@ function getClientById(id) {
     var client = connectedClients[id];
 }
 
-function setClientStatusById(id) {
+function setClientStatusById(id, status) {
     var client = connectedClients[id];
     if (client) {
-        client.status = "findingMatch";
+        client.status = status;
     }
 
     console.log(connectedClients);
