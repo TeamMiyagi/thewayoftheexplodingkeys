@@ -1,13 +1,20 @@
 var bout;
 var game;
+var socket;
 
 var player1Text;
 var player2Text;
 var player1;
 var player2;
+var sentence;
 
-var Game = function(boutInfo) {
+var sentenceChars;
+
+
+
+var Game = function(boutInfo, socketInfo) {
     bout = boutInfo;
+    socket = socketInfo;
 
     game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {
         preload: preload,
@@ -28,7 +35,7 @@ function preload() {
 
 function create() {
     game.stage.backgroundColor = 0xaaaaaa;
-    $('canvas').addClass('center-block');
+    $('canvas').addClass('game center-block');
 
     player1Text = game.add.text(0, 0, bout.player1.name, {});
     player2Text = game.add.text(0, 0, bout.player2.name, { align: 'right', boundsAlignH: 'right' });
@@ -43,10 +50,28 @@ function create() {
     player2.scale.setTo(-3, 3);
     player2.animations.add('ready', [0, 1, 2, 3, 2, 1], 3, true);
     player2.animations.play('ready');
-    // player2.anchor.setTo(0.5, 1); //so it flips around its middle
+
+    sentenceChars = bout.sentence.split('');
+
+    sentence = game.add.text(0, 150, bout.sentence, { align: 'center', boundsAlignH: 'center' });
+    sentence.setTextBounds(0, 0, 800, 600);
 }
 
 function update() {
+    game.input.keyboard.onPressCallback = function(e) {
+        if (e === sentenceChars[0]) {
+            sentenceChars.shift();
+        }
+
+        if(!sentenceChars.length) {
+            console.log('round Complete!');
+
+            socket.emit('roundComplete', {
+                id: bout.id,
+                duration: Math.random() * 1000
+            });
+        }
+    };
 }
 
 module.exports = Game;

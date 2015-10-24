@@ -4,14 +4,19 @@ function createBout(player1, player2, sentence) {
     var id = createBoutId();
     var bout = {
         id: id,
-        player1: player1,
-        player2: player2,
+        player1: initPlayer(player1),
+        player2: initPlayer(player2),
         sentence: sentence
     };
 
     bouts[id] = bout;
     console.log(bouts);
     return bout;
+}
+
+function initPlayer(player) {
+    player.lives = 3;
+    return player;
 }
 
 function createBoutId() {

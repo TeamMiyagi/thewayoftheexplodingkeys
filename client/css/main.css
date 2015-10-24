@@ -11,6 +11,11 @@ body {
     color: #eee;
 }
 
+header {
+    margin-top: 10px;
+    display: inline-block;
+}
+
 input {
     color: #777;
 }
@@ -48,4 +53,8 @@ input {
     100% {
         transform: rotate(360deg);
     }
+}
+
+canvas.game {
+    margin-top: 50px;
 }

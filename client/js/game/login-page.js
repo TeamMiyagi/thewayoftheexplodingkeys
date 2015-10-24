@@ -40,9 +40,10 @@ function run(ip) {
         console.log(boutStartedEvent);
         boutId = boutStartedEvent.id;
 
+        $('header').hide();
         $('#findingMatch').hide();
         $('#game').show();
-        var game = new Game(boutStartedEvent);
+        var game = new Game(boutStartedEvent, socket);
     });
 }
 
