@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var ip = require('ip').address();
+var clients = [];
 var connectedClients = {};
 
 app.use(express.static(__dirname + '/../client'));
@@ -9,6 +11,15 @@ app.use('/public', express.static(__dirname + '/../public'));
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/../client/index.html');
+});
+
+app.get('/ip', function(req, res) {
+    var env = process.env.NODE_ENV;
+    var ipToReturn = ip;
+    if (!env || env !== 'local') {
+        ipToReturn = '52.17.219.89';
+    }
+    return res.send({ip: ipToReturn});
 });
 
 app.get('/clients', function(req, res) {
