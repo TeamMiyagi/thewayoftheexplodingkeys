@@ -17,7 +17,12 @@ gulp.task('copy-client', function() {
         .pipe(gulp.dest('./public/assets/'));
 })
 
-gulp.task('build-client', ['copy-client'], function() {
+gulp.task('css', function() {
+    gulp.src('client/css/main.css')
+        .pipe(gulp.dest('./public/css'));
+})
+
+gulp.task('build-client', ['copy-client', 'css'], function() {
     var b = browserify();
 
     b.transform(babelify);

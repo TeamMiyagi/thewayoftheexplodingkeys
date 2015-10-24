@@ -5,23 +5,37 @@
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="public/js/phaser.min.js"></script>
     <script src="public/js/main.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+    <link rel="stylesheet" href="public/css/main.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>The Way of the Exploding Keys</h1>
-    <h2>"Man who catch fly with chopstick accomplish anything."</h2>
+    <div class="container text-center">
+        <h1>The Way of the Exploding Keys</h1>
+        <h2>"Man who catch fly with chopstick accomplish anything."</h2>
 
-    <div id="welcomeDiv">
-        <span>Welcome grasshopper to The Way of the Exploding Keys. Before you test yourself against other warriors, you must tell us who you are.</span>
-        <span>Enter your name:</span>
-        <input type="text" name="name" value="Daniel">
-        <button id="createPlayerButton" type="button">Create</button>
+        <div id="welcomeDiv" class="center-block container__input-div">
+            <p>Welcome grasshopper to The Way of the Exploding Keys. Before you test yourself against other warriors, you must tell us who you are.</p>
+            <div class="user-text">
+                <span>Your name:</span>
+                <input type="text" name="name" value="Daniel">
+                <button id="createPlayerButton" type="button" class="btn btn-lg btn-block">Create</button>
+            </div>
+        </div>
+
+        <div id="startGameDiv" class="center-block container__input-div">
+            <div class="user-text">
+                <span>Welcome </span><span id="playerName"></span>
+                <div class="start-game">
+                    <button id="startGameButton" class="btn btn-lg btn-block" type="button">Find opponent</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="game"></div>
     </div>
-
-    <div id="startGameDiv">
-        <span>Welcome </span><span id="playerName"></span>
-        <button id="startGameButton" type="button">Find opponent</button>
-    </div>
-
-    <div id="game"></div>
 </body>
 </html>
