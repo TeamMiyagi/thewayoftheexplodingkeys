@@ -1,26 +1,24 @@
 language: node_js
-
 node_js:
-  - 0.1
-
+- 0.1
 before_deploy:
-  - gulp build-client
-  - zip -r revision *
-  - mkdir -p uploads
-  - mv revision.zip uploads/revision.zip
-
+- gulp build-client
+- zip -r revision *
+- mkdir -p uploads
+- mv revision.zip uploads/revision.zip
 deploy:
+  matrix:
   - provider: s3
-    access_key_id: AKIAI4QID4LCNXWNWDDQ
+    access_key_id: AKIAIKPGQSIBKZSYRAKQ
     secret_access_key:
-      secure: pRI6NlOUmfCfh9tPTRgqv/b/Pv8MAZngtdsk79Z0EwSauX3vhq3/KaSFyRpU6niu6yiBXOGNwjDT+kVjc2hofzu68/I10IEXpkRl6MoSipEs7WIWEQhAcPddGHofyRls3ksPyM+ua7Yl3bnZV9vNRrvSLmCifS/X41q7gyRj84BQY/rCV090BgBn1W6tMM8amyATbGn+6TFl3jluMyYE4Ewyk9o0gMJkZjBBHMEtb0a9FiYDsuV9tp7J1/YD4nYuxyD6khhWAkuIaQ7SO81AMcdssVyAj7zuh+16N+YYnZ44i/kjzbsHV4T6m/TQ9kLzNgDC7bL6SWo06dMFYt9P+jQvz51Cv+Tm3+Foi/iTSMs/qxISJrkwlHHMUZrb+eYqz3UW1XXp6r4XVpgNJ1nmrDyXKxf4T+GyaAg62Up+npUD4dWtEA4BY7jSWf6cy7ajaiGLG1neuZCatK7TVQIiWy14OIP+3wy2LM81cJKlK2dxUDM8Seq/6G0Orj/T2iGtWJ86V4/bqnkyLW7gVrVRpxvS0Wxkc50zpUTjyH4SgGvPs3FTddLumn7k9EdGFlVQPDPd+k/YKeZE3qQ/jYRWX7dphAqgRC6+hcopAc8wyEo5rLBQGTBCHpV0Jq7T6uuRpGQOKqzaAVmi622GVnYIwQmUzMKmKSg4t6le2sNu63s=
+      secure: Aj6brRjDuA/a+gKjAMBEgMhwAuC1boK23vMvJpqit3yOUpJXzbg8yPBfwQ+9sFW27ul9SrYKxCpOsW6QIGKlfzpKS2z2CmwrP8RxitPEBCUhHdy5FkMXLPbHWdRU9pg85lD/WQ+Ql6EzLyGmvgQ3CG6dmzexgfCVZMk3uxtMn6xysWAKDAlknA0LWetbTSyEVuwB98l3Yec93DGkpOaxetz+dZbOQzzrBPNja7xWJSEW6FDCoGbNj0rh77HCINHaSqDIrzsWc8D06oOcP1gTnoAaK3s49Yykp5SoJYtKaLjOy4yOUcXGkpnFvJCfzR5x7mlVwtDibZY31/yzLQMXrhD4rE/0iHcaEITsytl7CxweGyH/Q6FLJtALQW5UrI44mIWH7uW45iVCfz/kqatSdHONe82YRs7bgX46Biodj+eE7qdQTQq36ndd05pzljRauH/fhQhSVSijRYMieZ/S9To+pd9qozbXPFznZCiAYWc7evuBdNpJ1houAJIPhQkCfaBA+6iZR9321ZFsReL2O+bvoxyvDffqKGr/96q5CA14H+/7G9uZh50iRO+Wl73mb5gaiiZkOOsmU1FRkbYDzu93WmxskgwSoGdqiDhPmsowuSRttH5wV/HE4UkYybCgN0c9ARSO+ipYAz8o0zN6QNB+MoCK9gKiGkQFSUnmLtI=
     local_dir: uploads
     skip_cleanup: true
     bucket: twotek-revisions
   - provider: codedeploy
-    access_key_id: AKIAI4QID4LCNXWNWDDQ
+    access_key_id: AKIAIKPGQSIBKZSYRAKQ
     secret_access_key:
-      secure: pRI6NlOUmfCfh9tPTRgqv/b/Pv8MAZngtdsk79Z0EwSauX3vhq3/KaSFyRpU6niu6yiBXOGNwjDT+kVjc2hofzu68/I10IEXpkRl6MoSipEs7WIWEQhAcPddGHofyRls3ksPyM+ua7Yl3bnZV9vNRrvSLmCifS/X41q7gyRj84BQY/rCV090BgBn1W6tMM8amyATbGn+6TFl3jluMyYE4Ewyk9o0gMJkZjBBHMEtb0a9FiYDsuV9tp7J1/YD4nYuxyD6khhWAkuIaQ7SO81AMcdssVyAj7zuh+16N+YYnZ44i/kjzbsHV4T6m/TQ9kLzNgDC7bL6SWo06dMFYt9P+jQvz51Cv+Tm3+Foi/iTSMs/qxISJrkwlHHMUZrb+eYqz3UW1XXp6r4XVpgNJ1nmrDyXKxf4T+GyaAg62Up+npUD4dWtEA4BY7jSWf6cy7ajaiGLG1neuZCatK7TVQIiWy14OIP+3wy2LM81cJKlK2dxUDM8Seq/6G0Orj/T2iGtWJ86V4/bqnkyLW7gVrVRpxvS0Wxkc50zpUTjyH4SgGvPs3FTddLumn7k9EdGFlVQPDPd+k/YKeZE3qQ/jYRWX7dphAqgRC6+hcopAc8wyEo5rLBQGTBCHpV0Jq7T6uuRpGQOKqzaAVmi622GVnYIwQmUzMKmKSg4t6le2sNu63s=
+      secure: Aj6brRjDuA/a+gKjAMBEgMhwAuC1boK23vMvJpqit3yOUpJXzbg8yPBfwQ+9sFW27ul9SrYKxCpOsW6QIGKlfzpKS2z2CmwrP8RxitPEBCUhHdy5FkMXLPbHWdRU9pg85lD/WQ+Ql6EzLyGmvgQ3CG6dmzexgfCVZMk3uxtMn6xysWAKDAlknA0LWetbTSyEVuwB98l3Yec93DGkpOaxetz+dZbOQzzrBPNja7xWJSEW6FDCoGbNj0rh77HCINHaSqDIrzsWc8D06oOcP1gTnoAaK3s49Yykp5SoJYtKaLjOy4yOUcXGkpnFvJCfzR5x7mlVwtDibZY31/yzLQMXrhD4rE/0iHcaEITsytl7CxweGyH/Q6FLJtALQW5UrI44mIWH7uW45iVCfz/kqatSdHONe82YRs7bgX46Biodj+eE7qdQTQq36ndd05pzljRauH/fhQhSVSijRYMieZ/S9To+pd9qozbXPFznZCiAYWc7evuBdNpJ1houAJIPhQkCfaBA+6iZR9321ZFsReL2O+bvoxyvDffqKGr/96q5CA14H+/7G9uZh50iRO+Wl73mb5gaiiZkOOsmU1FRkbYDzu93WmxskgwSoGdqiDhPmsowuSRttH5wV/HE4UkYybCgN0c9ARSO+ipYAz8o0zN6QNB+MoCK9gKiGkQFSUnmLtI=
     bucket: twotek-revisions
     key: revision.zip
     bundle_type: zip
