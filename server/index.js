@@ -5,6 +5,7 @@ var io = require('socket.io')(http);
 var ip = require('ip').address();
 var sentenceService = require('./sentence-service');
 var clientsService = require('./clients-service');
+var boutsService = require('./bouts-service');
 
 
 app.use(express.static(__dirname + '/../client'));
@@ -81,12 +82,7 @@ function startBout(player1Id, player2Id) {
     var player1 = clientsService.getById(player1Id);
     var player2 = clientsService.getById(player2Id);
 
-    var bout = {
-        id: createBoutId(),
-        player1: player1,
-        player2: player2,
-        sentence: sentenceService.get()
-    };
+    var bout = boutsService.create(player1, player2, sentenceService.get());
 
     var player1Msg = bout;
     var player2Msg = {
@@ -98,11 +94,4 @@ function startBout(player1Id, player2Id) {
 
     io.sockets.connected[player1.id].emit('boutStarted', player1Msg);
     io.sockets.connected[player2.id].emit('boutStarted', player2Msg);
-}
-
-function createBoutId() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-        return v.toString(16);
-    });
 }
