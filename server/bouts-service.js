@@ -21,4 +21,28 @@ function createBoutId() {
     });
 }
 
+function updateBout(socketId, roundCompleteMsg) {
+    var bout = bouts[roundCompleteMsg.id];
+    if (!bout) {
+        console.log("Failed to find bout to update");
+        return;
+    }
+
+    console.log("Updating bout: " + bout);
+
+    // which player?
+    if (bout.player1.id === socketId) {
+        bout.player1Duration = roundComplete.duration;
+        console.log("player1 duration set")
+    }
+    else if (bout.player1.id === socketId) {
+        bout.player1Duration = roundComplete.duration;
+        console.log("player2 duration set")
+    }
+    else {
+        console.log("Ouch, no idea who just completed a bout");
+    }
+}
+
 module.exports.create = createBout;
+module.exports.updateBout = updateBout;

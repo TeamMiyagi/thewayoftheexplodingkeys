@@ -65,6 +65,10 @@ io.on('connection', function (socket) {
 
         console.log("findMatch end");
     });
+
+    sock.on('roundComplete', function(socket, roundCompleteMsg) {
+        boutsService.updateBout(socket.id, roundCompleteMsg);
+    });
 });
 
 function createLoggedInEvent(playerName) {
