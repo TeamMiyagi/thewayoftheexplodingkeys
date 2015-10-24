@@ -1,0 +1,28 @@
+language: node_js
+
+node_js:
+  - 0.1
+
+before_deploy:
+  - zip -r revision *
+  - mkdir -p uploads
+  - mv revision.zip uploads/revision.zip
+
+deploy:
+  - provider: s3
+    access_key_id: AKIAI4QID4LCNXWNWDDQ
+    secret_access_key:
+      secure: pRI6NlOUmfCfh9tPTRgqv/b/Pv8MAZngtdsk79Z0EwSauX3vhq3/KaSFyRpU6niu6yiBXOGNwjDT+kVjc2hofzu68/I10IEXpkRl6MoSipEs7WIWEQhAcPddGHofyRls3ksPyM+ua7Yl3bnZV9vNRrvSLmCifS/X41q7gyRj84BQY/rCV090BgBn1W6tMM8amyATbGn+6TFl3jluMyYE4Ewyk9o0gMJkZjBBHMEtb0a9FiYDsuV9tp7J1/YD4nYuxyD6khhWAkuIaQ7SO81AMcdssVyAj7zuh+16N+YYnZ44i/kjzbsHV4T6m/TQ9kLzNgDC7bL6SWo06dMFYt9P+jQvz51Cv+Tm3+Foi/iTSMs/qxISJrkwlHHMUZrb+eYqz3UW1XXp6r4XVpgNJ1nmrDyXKxf4T+GyaAg62Up+npUD4dWtEA4BY7jSWf6cy7ajaiGLG1neuZCatK7TVQIiWy14OIP+3wy2LM81cJKlK2dxUDM8Seq/6G0Orj/T2iGtWJ86V4/bqnkyLW7gVrVRpxvS0Wxkc50zpUTjyH4SgGvPs3FTddLumn7k9EdGFlVQPDPd+k/YKeZE3qQ/jYRWX7dphAqgRC6+hcopAc8wyEo5rLBQGTBCHpV0Jq7T6uuRpGQOKqzaAVmi622GVnYIwQmUzMKmKSg4t6le2sNu63s=
+    local_dir: uploads
+    skip_cleanup: true
+    bucket: revisions
+  - provider: codedeploy
+    access_key_id: AKIAI4QID4LCNXWNWDDQ
+    secret_access_key:
+      secure: pRI6NlOUmfCfh9tPTRgqv/b/Pv8MAZngtdsk79Z0EwSauX3vhq3/KaSFyRpU6niu6yiBXOGNwjDT+kVjc2hofzu68/I10IEXpkRl6MoSipEs7WIWEQhAcPddGHofyRls3ksPyM+ua7Yl3bnZV9vNRrvSLmCifS/X41q7gyRj84BQY/rCV090BgBn1W6tMM8amyATbGn+6TFl3jluMyYE4Ewyk9o0gMJkZjBBHMEtb0a9FiYDsuV9tp7J1/YD4nYuxyD6khhWAkuIaQ7SO81AMcdssVyAj7zuh+16N+YYnZ44i/kjzbsHV4T6m/TQ9kLzNgDC7bL6SWo06dMFYt9P+jQvz51Cv+Tm3+Foi/iTSMs/qxISJrkwlHHMUZrb+eYqz3UW1XXp6r4XVpgNJ1nmrDyXKxf4T+GyaAg62Up+npUD4dWtEA4BY7jSWf6cy7ajaiGLG1neuZCatK7TVQIiWy14OIP+3wy2LM81cJKlK2dxUDM8Seq/6G0Orj/T2iGtWJ86V4/bqnkyLW7gVrVRpxvS0Wxkc50zpUTjyH4SgGvPs3FTddLumn7k9EdGFlVQPDPd+k/YKeZE3qQ/jYRWX7dphAqgRC6+hcopAc8wyEo5rLBQGTBCHpV0Jq7T6uuRpGQOKqzaAVmi622GVnYIwQmUzMKmKSg4t6le2sNu63s=
+    bucket: revisions
+    key: revision.zip
+    bundle_type: zip
+    application: twotek
+    deployment_group: twotek-deployment-group
+    region: eu-west-1
