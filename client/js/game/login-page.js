@@ -6,21 +6,21 @@ $(document).ready(function() {
 
 var Game = require('./game.js');
 
+var socket;
+
 function run(ip) {
-    var socket = io('http://' + ip +':3000');
+    socket = io('http://' + ip +':3000');
 
     $('#game').hide();
     $('#startGameDiv').hide();
     $('#findingMatch').hide();
 
-    $('#createPlayerButton').on('click', function(e) {
-        var playerName = $('#welcomeDiv input').val();
-        socket.emit('new-player', playerName);
-
-        $('#welcomeDiv').hide();    // TODO: use class
-
-        $('#playerName').text(playerName);
-        $('#startGameDiv').show();
+    $('#createPlayerInput').focus();
+    $('#createPlayerButton').on('click', startGame);
+    $('#createPlayerInput').keydown(function(e) {
+        if (e.keyCode === 13) {
+            startGame();
+        }
     });
 
     $('#startGameButton').on('click', function(e) {
@@ -42,4 +42,14 @@ function run(ip) {
         $('#game').show();
         var game = new Game(boutStartedEvent);
     });
+}
+
+function startGame() {
+    var playerName = $('#welcomeDiv input').val();
+    socket.emit('new-player', playerName);
+
+    $('#welcomeDiv').hide();    // TODO: use class
+
+    $('#playerName').text(playerName);
+    $('#startGameDiv').show();
 }
