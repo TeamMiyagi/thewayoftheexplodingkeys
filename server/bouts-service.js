@@ -51,5 +51,21 @@ function updateBout(socketId, roundCompleteMsg) {
     }
 }
 
+function getRoundStatus(boutId) {
+    var bout = bouts[boutId];
+    var completed = (bout.player1Duration && bout.player2Duration);
+    return {
+        isComplete: completed,
+        player1Won: bout.player1Duration < bout.player2Duration,
+        player2Won: bout.player1Duration >= bout.player2Duration
+    };
+}
+
+function getBout(boutId) {
+    return bouts[boutId];
+}
+
 module.exports.create = createBout;
-module.exports.updateBout = updateBout;
+module.exports.update = updateBout;
+module.exports.get = getBout;
+module.exports.getRoundStatus = getRoundStatus;
