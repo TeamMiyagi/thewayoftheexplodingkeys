@@ -5,7 +5,7 @@ node_js:
 
 before_deploy:
   - gulp build-client
-  - zip -r revision *
+  - zip -rq revision *
   - mkdir -p uploads
   - mv revision.zip uploads/revision.zip
 deploy:
