@@ -99,7 +99,7 @@ function create() {
     roundOverText.setTextBounds(0, 0, 800, 600);
     socket.on('roundResult', function(roundResult) {
         console.log(roundResult);
-        result = roundResult;
+        result = roundResult.didYouWin;
         state = 'ROUND_OVER';
     });
 
