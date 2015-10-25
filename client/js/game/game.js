@@ -4,6 +4,8 @@ var socket;
 
 var player1Text;
 var player2Text;
+var player1Lives;
+var player2Lives;
 var player1;
 var player2;
 var sentence;
@@ -49,6 +51,7 @@ function preload() {
 
     game.load.spritesheet('player', 'assets/images/sprites/player-idle.png', 49, 52, 4);
     game.load.spritesheet('player-knockout', 'assets/images/sprites/player-knockout.png', 70, 70, 4);
+    game.load.image('player-life', 'assets/images/sprites/life.png', 29, 30);
     game.load.image("background", "assets/images/sprites/game-dojo.jpg", 0, 0, 800, 600);
 
     game.load.audio('gong', 'assets/sounds/asianGongHit.mp3');
@@ -64,6 +67,16 @@ function create() {
     player1Text = game.add.text(0, 0, bout.player1.name, { fill: '#fff' });
     player2Text = game.add.text(0, 0, bout.player2.name, { fill: '#fff', align: 'right', boundsAlignH: 'right' });
     player2Text.setTextBounds(0, 0, 800, 600);
+
+    player1Lives = [];
+    for (var i = 0; i < bout.player1.lives; i++) {
+        player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
+    }
+
+    player2Lives = [];
+    for (i = 0; i < bout.player2.lives; i++) {
+        player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
+    }
 
     player1 = game.add.sprite(0, 300, 'player');
     player1.scale.setTo(3, 3);
