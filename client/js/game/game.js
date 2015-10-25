@@ -24,10 +24,10 @@ var oneSecond = 1;
 var previousTime;
 var gongSound;
 var finishGameButton;
-
-var state = 'COUNT_DOWN';
+var state;
 
 var Game = function(boutInfo, socketInfo, playerInfo, endGameHandler) {
+    state = 'COUNT_DOWN';
     bout = boutInfo;
     socket = socketInfo;
     playerId = playerInfo;
@@ -224,17 +224,22 @@ function create() {
 
                 console.log('yay');
                 setTimeout(function() {
-                    finishGameButton = game.add.button(game.world.centerX, 300, 'scroll', endGameHandlerFunction, this);
+                    finishGameButton = game.add.button(game.world.centerX, 300, 'scroll', function() {
+                        endGameHandlerFunction();
+                        cleanup();
+                    }, this);
                     finishGameButton.anchor.set(0.5);
                     var text = game.add.text(game.world.centerX, 300, "Find another opponent!", {font: "32px Arial", fill: "#404040"});
                     text.anchor.set(0.5);
                     //finishGameButton.addChild(text);
-
                 },
                 3000);
         }
         else {
+            console.log('start round timeout...');
+
             setTimeout(function() {
+                console.log('inside start round timeout...');
                 setUpPlayerLives();
                 setUpPlayers();
                 sentenceChars = bout.sentence.split('');
@@ -331,6 +336,32 @@ function update() {
     }
 
     previousTime = game.time.now;
+}
+
+function cleanup() {
+    bout = null;
+    //game = null;
+    socket = null;
+    playerId = null;
+    endGameHandlerFunction = null;
+    knockedOutPlayer = null;
+    player1Text = null;
+    player2Text = null;
+    player1Lives = null;
+    player2Lives = null;
+    player1 = null;
+    player2 = null;
+    sentence = null;
+    sentenceChars = null;
+    startOfRoundMs = null;
+    roundOver = null;
+    roundOverText = null;
+    result = null;
+    countDown = null;
+    oneSecond = null;
+    previousTime = null;
+    gongSound = null;
+    finishGameButton = null;
 }
 
 module.exports = Game;

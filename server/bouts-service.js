@@ -15,7 +15,7 @@ function createBout(player1, player2, sentence) {
 }
 
 function initPlayer(player) {
-    player.lives = 3;
+    player.lives = 1;
     return player;
 }
 
