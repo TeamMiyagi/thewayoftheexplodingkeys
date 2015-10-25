@@ -41,7 +41,7 @@ function preload() {
     console.log("boutInfo: ", bout);
     $('body').prepend($('<div>').addClass('mask'));
     game.load.spritesheet('player', 'assets/images/sprites/player-idle.png', 49, 52, 4);
-    // game.load.spritesheet('player', 'assets/images/sprites/player-knockout.png', 70, 70, 4);
+    game.load.spritesheet('player-knockout', 'assets/images/sprites/player-knockout.png', 70, 70, 4);
     game.load.image("background", "assets/images/sprites/game-dojo.jpg", 0, 0, 800, 600);
 }
 
@@ -104,10 +104,28 @@ function update() {
         }
     };
 
-    if(roundOver) {
+    if (roundOver) {
         roundOver = false;
-        roundOverText.text = result === true ? 'Winner!' : 'Boooo! Loser!';
+        roundOverText.text = (result ? 'Winner!' : 'Boooo! Loser!');
         sentence.text = '';
+
+        // Warning: here be hacks
+        if (!result) {
+            player1.animations.stop('ready');
+            player1.visible = false;
+            player1 = game.add.sprite(0, 300, 'player-knockout');
+            player1.scale.setTo(3, 3);
+            player1.animations.add('knockout', [0, 1, 2, 3], 6, false);
+            player1.animations.play('knockout');
+        }
+        else {
+            player2.animations.stop('ready');
+            player2.visible = false;
+            player2 = game.add.sprite(800, 300, 'player-knockout');
+            player2.scale.setTo(-3, 3);
+            player2.animations.add('knockout', [0, 1, 2, 3], 6, false);
+            player2.animations.play('knockout');
+        }
     }
 }
 
