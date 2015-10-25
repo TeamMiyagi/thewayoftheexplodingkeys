@@ -15,9 +15,10 @@ var roundOver;
 var roundOverText;
 var result;
 var countDown;
-var boutStart = false;
 var oneSecond = 1;
 var previousTime;
+
+var state = 'COUNT_DOWN';
 
 var Game = function(boutInfo, socketInfo) {
     bout = boutInfo;
@@ -82,7 +83,7 @@ function create() {
     socket.on('roundResult', function(roundResult) {
         console.log(roundResult);
         result = roundResult;
-        roundOver = true;
+        state = 'ROUND_OVER';
     });
 
     countDown = game.add.text(0, 150, '3', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
@@ -97,7 +98,7 @@ function update() {
         previousTime = game.time.now;
     }
 
-    if (!boutStart) {
+    if (state === 'COUNT_DOWN') {
         countDownInt = parseInt(countDown.text);
         deltaTime = (game.time.now - previousTime) / 1000;
         oneSecond -= deltaTime;
@@ -109,14 +110,14 @@ function update() {
                 countDown.text = countDownInt - 1;
             } else {
                 countDown.text = '';
-                boutStart = true;
+                state = 'BOUT_BEGIN';
             }
 
             oneSecond = 1;
         }
     }
 
-    if (boutStart && !roundOver) {
+    if (state === 'BOUT_BEGIN') {
         game.input.keyboard.onPressCallback = function(e) {
             var currentCharacter;
 
@@ -144,9 +145,10 @@ function update() {
         sentence.alpha = 1.0;
     }
 
-    if (roundOver) {
-        roundOver = false;
-        roundOverText.text = (result ? 'Winner!' : 'Boooo! Loser!');
+    if(state === 'ROUND_OVER') {
+        game.input.keyboard.onPressCallback = null;
+        //roundOver = false;
+        roundOverText.text = result === true ? 'Winner!' : 'Boooo! Loser!';
         sentence.text = '';
 
         // Warning: here be hacks
@@ -166,6 +168,8 @@ function update() {
             player2.animations.add('knockout', [0, 1, 2, 3], 6, false);
             player2.animations.play('knockout');
         }
+
+        state = 'SOMETHING_ELSE'; // TODO: uhh, probably want to fix this...
     }
 
     previousTime = game.time.now;
