@@ -6,6 +6,7 @@ var ip = require('ip').address();
 var sentenceService = require('./sentence-service');
 var clientsService = require('./clients-service');
 var boutsService = require('./bouts-service');
+var playersService = require('./players-service');
 
 
 app.use(express.static(__dirname + '/../client'));
@@ -53,6 +54,7 @@ io.on('connection', function (socket) {
             socket.emit('loginEvent', { success: false });
         }
         else {
+            playersService.add(playerName);
             clientsService.add(playerName, socket);
             socket.emit('loginEvent', createLoggedInEvent(socket.id, playerName));
         }
@@ -112,10 +114,7 @@ function createLoggedInEvent(playerId, playerName) {
         player: {
             id: playerId,
             name: playerName,
-            stats: {
-                gamesWon: 0,
-                gamesLost: 0
-            }
+            stats: playersService.stats(playerName)
         }
     };
 }
