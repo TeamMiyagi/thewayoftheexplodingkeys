@@ -11,6 +11,9 @@ var sentence;
 var sentenceChars;
 var startOfRoundMs;
 
+var roundOver;
+var roundOverText;
+var result;
 
 var Game = function(boutInfo, socketInfo) {
     bout = boutInfo;
@@ -20,6 +23,12 @@ var Game = function(boutInfo, socketInfo) {
         preload: preload,
         create: create,
         update: update
+    });
+
+    $(document).on('keydown', function(e) {
+        if (e.keyCode === 8) {
+            e.preventDefault();
+        }
     });
 
     return {
@@ -62,12 +71,26 @@ function create() {
 
     sentence = game.add.text(0, 150, bout.sentence, { fill: '#fff', align: 'center', boundsAlignH: 'center' });
     sentence.setTextBounds(0, 0, 800, 600);
+
+    roundOverText = game.add.text(0, 150, '', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+    roundOverText.setTextBounds(0, 0, 800, 600);
+    socket.on('roundResult', function(roundResult) {
+        console.log(roundResult);
+        result = roundResult;
+        roundOver = true;
+    });
 }
 
 function update() {
     game.input.keyboard.onPressCallback = function(e) {
+        var currentCharacter;
         if (e === sentenceChars[0]) {
+            currentCharacter = sentence.text.length - sentenceChars.length;
             sentenceChars.shift();
+            sentence.addColor('#00ff00', currentCharacter);
+            if (sentenceChars.length) {
+                sentence.addColor('#fff', currentCharacter + 1);
+            }
         }
         if (e === '!') {
             sentenceChars = "";
@@ -80,6 +103,12 @@ function update() {
             });
         }
     };
+
+    if(roundOver) {
+        roundOver = false;
+        roundOverText.text = result === true ? 'Winner!' : 'Boooo! Loser!';
+        sentence.text = '';
+    }
 }
 
 module.exports = Game;
