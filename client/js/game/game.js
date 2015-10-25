@@ -25,6 +25,12 @@ var Game = function(boutInfo, socketInfo) {
         update: update
     });
 
+    $(document).on('keydown', function(e) {
+        if (e.keyCode === 8) {
+            e.preventDefault();
+        }
+    });
+
     return {
         game: game,
         boutInfo: boutInfo

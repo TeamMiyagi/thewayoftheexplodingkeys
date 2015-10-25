@@ -1,10 +1,4 @@
 $(document).ready(function() {
-    $(document).on('keydown', function(e) {
-        if (e.keyCode === 8) {
-            e.preventDefault();
-        }
-    });
-
     $.getJSON('/ip', function(data) {
         run(data.ip);
     });
