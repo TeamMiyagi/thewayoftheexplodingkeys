@@ -58,6 +58,8 @@ function preload() {
     game.load.image("background", "assets/images/sprites/game-dojo.jpg", 0, 0, 800, 600);
 
     game.load.audio('gong', 'assets/sounds/asianGongHit.mp3');
+
+    game.stage.disableVisibilityChange = true;
 }
 
 function setUpPlayers() {
@@ -127,17 +129,21 @@ function setUpPlayerLives() {
     if (isPlayer1(bout.player1.id)) {
         console.log('i am player 1');
         for (i = 0; i < bout.player1.lives; i++) {
+            console.log(i, bout.player1.lives);
             player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
         }
         for (i = 0; i < bout.player2.lives; i++) {
+            console.log(i, bout.player2.lives);
             player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
         }
     } else {
         console.log('i am player 2');
         for (i = 0; i < bout.player2.lives; i++) {
+            console.log(i, bout.player2.lives);
             player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
         }
         for (i = 0; i < bout.player1.lives; i++) {
+            console.log(i, bout.player1.lives);
             player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
         }
     }
@@ -176,6 +182,7 @@ function create() {
         console.log(roundResult);
 
         result = roundResult.didYouWin;
+        bout = roundResult.nextBout;
         state = 'ROUND_OVER';
 
         if (roundResult.nextBout.player1.lives === 0 ||
@@ -211,7 +218,6 @@ function create() {
                 // Add button to play again.
         } else {
             setTimeout(function() {
-                bout = roundResult.nextBout;
                 setUpPlayerLives();
                 setUpPlayers();
                 sentenceChars = bout.sentence.split('');
