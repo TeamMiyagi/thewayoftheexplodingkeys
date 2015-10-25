@@ -42,9 +42,10 @@ function updateBout(socketId, roundCompleteMsg) {
     console.log('Updated bout: ' + JSON.stringify(bout));
 }
 
-function resetDurations(bout) {
+function resetBout(bout, sentence) {
     bout.player1Duration = null;
     bout.player2Duration = null;
+    bout.sentence = sentence;
 }
 
 function updateDurations(playerId, bout, duration) {
@@ -87,4 +88,4 @@ module.exports.create = createBout;
 module.exports.update = updateBout;
 module.exports.get = getBout;
 module.exports.getRoundStatus = getRoundStatus;
-module.exports.resetDurations = resetDurations;
+module.exports.resetBout = resetBout;
