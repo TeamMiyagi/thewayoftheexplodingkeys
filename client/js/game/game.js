@@ -62,6 +62,8 @@ function preload() {
     game.load.image('scroll', 'assets/images/scrollBackgroundThin.png', 100, 50);
 
     game.load.audio('gong', 'assets/sounds/asianGongHit.mp3');
+
+    game.stage.disableVisibilityChange = true;
 }
 
 function setUpPlayers() {
@@ -131,17 +133,21 @@ function setUpPlayerLives() {
     if (isPlayer1(bout.player1.id)) {
         console.log('i am player 1');
         for (i = 0; i < bout.player1.lives; i++) {
+            console.log(i, bout.player1.lives);
             player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
         }
         for (i = 0; i < bout.player2.lives; i++) {
+            console.log(i, bout.player2.lives);
             player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
         }
     } else {
         console.log('i am player 2');
         for (i = 0; i < bout.player2.lives; i++) {
+            console.log(i, bout.player2.lives);
             player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
         }
         for (i = 0; i < bout.player1.lives; i++) {
+            console.log(i, bout.player1.lives);
             player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
         }
     }
@@ -180,10 +186,14 @@ function create() {
         console.log(roundResult);
 
         result = roundResult.didYouWin;
+        bout = roundResult.nextBout;
         state = 'ROUND_OVER';
 
         if (roundResult.nextBout.player1.lives === 0 ||
             roundResult.nextBout.player2.lives === 0) {
+
+                socket.emit('gameOver');
+
                 state = 'GAME_OVER';
 
                 setUpPlayerLives();
@@ -221,7 +231,6 @@ function create() {
         }
         else {
             setTimeout(function() {
-                bout = roundResult.nextBout;
                 setUpPlayerLives();
                 setUpPlayers();
                 sentenceChars = bout.sentence.split('');

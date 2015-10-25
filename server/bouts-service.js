@@ -85,8 +85,30 @@ function getBout(boutId) {
     return bouts[boutId];
 }
 
+function deleteBoutsByPlayerId(playerId) {
+    collectBoutsIdsByPlayerId(playerId).forEach(function(id) {
+        delete bouts[id];
+    });
+}
+
+function collectBoutsIdsByPlayerId(playerId) {
+    var boutIds = [];
+    for (var boutId in bouts) {
+        if (!bouts.hasOwnProperty(boutId)) {
+            continue;
+        }
+
+        if (bouts[boutId].player1.id === playerId || bouts[boutId].player2.id === playerId) {
+            boutIds.push(boutId);
+        }
+    }
+
+    return boutIds;
+}
+
 module.exports.create = createBout;
 module.exports.update = updateBout;
 module.exports.get = getBout;
 module.exports.getRoundStatus = getRoundStatus;
 module.exports.resetBout = resetBout;
+module.exports.deleteBouts = deleteBoutsByPlayerId;
