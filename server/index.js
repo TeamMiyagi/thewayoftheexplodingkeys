@@ -40,6 +40,7 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function() {
         console.log('User disconnected');
+        boutsService.deleteBouts(socket.id);
         clientsService.remove(socket);
     });
 
@@ -84,6 +85,10 @@ io.on('connection', function (socket) {
                 nextBout: bout
             });
         }
+    });
+
+    socket.on('gameOver', function() {
+        boutsService.deleteBouts(socket.id);
     });
 });
 

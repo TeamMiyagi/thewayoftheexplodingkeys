@@ -2,6 +2,7 @@ var bout;
 var game;
 var socket;
 var playerId;
+var endGameHandlerFunction;
 
 var knockedOutPlayer;
 var player1Text;
@@ -22,13 +23,15 @@ var countDown;
 var oneSecond = 1;
 var previousTime;
 var gongSound;
+var finishGameButton;
 
 var state = 'COUNT_DOWN';
 
-var Game = function(boutInfo, socketInfo, playerInfo) {
+var Game = function(boutInfo, socketInfo, playerInfo, endGameHandler) {
     bout = boutInfo;
     socket = socketInfo;
     playerId = playerInfo;
+    endGameHandlerFunction = endGameHandler;
 
     game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {
         preload: preload,
@@ -50,12 +53,13 @@ var Game = function(boutInfo, socketInfo, playerInfo) {
 
 function preload() {
     console.log("boutInfo: ", bout);
-    $('body').prepend($('<div>').addClass('mask'));
+    // $('body').prepend($('<div>').addClass('mask'));
 
     game.load.spritesheet('player', 'assets/images/sprites/player-idle.png', 49, 52, 4);
     game.load.spritesheet('player-knockout', 'assets/images/sprites/player-knockout.png', 70, 70, 4);
     game.load.image('player-life', 'assets/images/sprites/life.png', 29, 30);
     game.load.image("background", "assets/images/sprites/game-dojo.jpg", 0, 0, 800, 600);
+    game.load.image('scroll', 'assets/images/scrollBackgroundThin.png', 100, 50);
 
     game.load.audio('gong', 'assets/sounds/asianGongHit.mp3');
 
@@ -158,7 +162,7 @@ function create() {
     game.stage.backgroundColor = 0xaaaaaa;
     game.add.tileSprite(0, 0, 800, 600, 'background');
 
-    $('.mask').fadeIn(500);
+    $('#mask').fadeIn(500);
     $('canvas').addClass('game center-block');
 
     player1Text = game.add.text(25, 10, bout.player1.name, { fill: '#fff' });
@@ -188,6 +192,9 @@ function create() {
 
         if (roundResult.nextBout.player1.lives === 0 ||
             roundResult.nextBout.player2.lives === 0) {
+
+                socket.emit('gameOver');
+
                 state = 'GAME_OVER';
 
                 setUpPlayerLives();
@@ -216,8 +223,14 @@ function create() {
                 }
 
                 console.log('yay');
-                // Add button to play again.
-        } else {
+                setTimeout(function() {
+                    finishGameButton = game.add.button(200, 300, 'scroll', endGameHandlerFunction, this);//, 2, 1, 0);
+                    var text = game.add.text(30, 50, "Click to return to find another opponent", {font: "24px Arial", fill: "#404040"});
+                    finishGameButton.addChild(text);
+                },
+                3000);
+        }
+        else {
             setTimeout(function() {
                 setUpPlayerLives();
                 setUpPlayers();
@@ -239,6 +252,10 @@ function create() {
 
     gongSound = game.add.audio('gong');
 }
+
+// function finishGameAction() {
+//     console.log("Button clicked!");
+// }
 
 function update() {
     var countDownInt;
@@ -308,9 +325,6 @@ function update() {
         setUpKnockedDownPlayer();
 
         state = 'SOMETHING_ELSE'; // TODO: uhh, probably want to fix this...
-
-        // knockedOutPlayer.animations.add('knockout', [0, 1, 2, 3], 6, false);
-        // knockedOutPlayer.animations.play('knockout');
     }
 
     previousTime = game.time.now;
