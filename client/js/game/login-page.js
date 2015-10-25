@@ -54,6 +54,7 @@ function run(ip) {
     });
 }
 
+
 function startGame() {
     var playerName = $('#welcomeDiv input').val();
     socket.emit('new-player', playerName);
@@ -68,7 +69,7 @@ function handleLogin(response) {
         $('#startGameDiv').show();
     }
     else {
-        console.log("Sorry, name taken");
+        alert('That name is already in use, please choose another');
     }
 }
 
