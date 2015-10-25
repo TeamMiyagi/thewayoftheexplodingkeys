@@ -54,7 +54,6 @@ function run(ip) {
     });
 }
 
-
 function startGame() {
     var playerName = $('#welcomeDiv input').val();
     socket.emit('new-player', playerName);

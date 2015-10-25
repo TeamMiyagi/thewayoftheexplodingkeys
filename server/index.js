@@ -112,7 +112,10 @@ function createLoggedInEvent(playerId, playerName) {
         player: {
             id: playerId,
             name: playerName,
-            rank: 1
+            stats: {
+                gamesWon: 0,
+                gamesLost: 0
+            }
         }
     };
 }
