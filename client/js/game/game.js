@@ -84,16 +84,38 @@ function setUpPlayers() {
     player2.animations.play('ready');
 }
 
+function setUpKnockedDownPlayer() {
+    // This is horrendous
+    knockedOutPlayer = (result ? player2 : player1);
+    knockedOutPlayer.animations.stop('ready');
+    knockedOutPlayer.visible = false;
+
+    if (!result) {
+        knockedOutPlayer = game.add.sprite(0, 300, 'player-knockout');
+        knockedOutPlayer.scale.setTo(3, 3);
+    }
+    else {
+        knockedOutPlayer = game.add.sprite(800, 300, 'player-knockout');
+        knockedOutPlayer.scale.setTo(-3, 3);
+    }
+
+    knockedOutPlayer.animations.add('knockout', [0, 1, 2, 3], 6, false);
+    knockedOutPlayer.animations.play('knockout');
+}
+
 function setUpPlayerLives() {
     var i;
 
     if (player1Lives) {
+        console.log('Player 1 Lives: ', player1Lives);
         player1Lives.forEach(function(life) {
             life.destroy();
         });
     }
 
     if (player2Lives) {
+        console.log('Player 2 Lives: ', player2Lives);
+
         player2Lives.forEach(function(life) {
             life.destroy();
         });
@@ -161,6 +183,7 @@ function create() {
                 state = 'GAME_OVER';
 
                 setUpPlayerLives();
+                setUpKnockedDownPlayer();
 
                 if (sentence) {
                     sentence.destroy();
@@ -272,23 +295,25 @@ function update() {
         sentence.text = '';
 
         // This is horrendous
-        knockedOutPlayer = (result ? player2 : player1);
-        knockedOutPlayer.animations.stop('ready');
-        knockedOutPlayer.visible = false;
+        // knockedOutPlayer = (result ? player2 : player1);
+        // knockedOutPlayer.animations.stop('ready');
+        // knockedOutPlayer.visible = false;
+        //
+        // if (!result) {
+        //     knockedOutPlayer = game.add.sprite(0, 300, 'player-knockout');
+        //     knockedOutPlayer.scale.setTo(3, 3);
+        // }
+        // else {
+        //     knockedOutPlayer = game.add.sprite(800, 300, 'player-knockout');
+        //     knockedOutPlayer.scale.setTo(-3, 3);
+        // }
 
-        if (!result) {
-            knockedOutPlayer = game.add.sprite(0, 300, 'player-knockout');
-            knockedOutPlayer.scale.setTo(3, 3);
-        }
-        else {
-            knockedOutPlayer = game.add.sprite(800, 300, 'player-knockout');
-            knockedOutPlayer.scale.setTo(-3, 3);
-        }
+        setUpKnockedDownPlayer();
 
         state = 'SOMETHING_ELSE'; // TODO: uhh, probably want to fix this...
 
-        knockedOutPlayer.animations.add('knockout', [0, 1, 2, 3], 6, false);
-        knockedOutPlayer.animations.play('knockout');
+        // knockedOutPlayer.animations.add('knockout', [0, 1, 2, 3], 6, false);
+        // knockedOutPlayer.animations.play('knockout');
     }
 
     previousTime = game.time.now;
