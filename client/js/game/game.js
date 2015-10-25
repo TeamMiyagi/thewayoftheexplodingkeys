@@ -116,6 +116,7 @@ function update() {
                 countDown.text = countDownInt - 1;
             } else {
                 countDown.text = '';
+                gongSound.play();
                 state = 'BOUT_BEGIN';
             }
 
