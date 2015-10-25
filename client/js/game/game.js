@@ -11,6 +11,9 @@ var sentence;
 var sentenceChars;
 var startOfRoundMs;
 
+var roundOver;
+var roundOverText;
+var result;
 
 var Game = function(boutInfo, socketInfo) {
     bout = boutInfo;
@@ -38,7 +41,7 @@ function preload() {
 function create() {
     game.stage.backgroundColor = 0xaaaaaa;
     game.add.tileSprite(0, 0, 800, 600, 'background');
-    
+
     $('.mask').fadeIn(500);
     $('canvas').addClass('game center-block');
 
@@ -61,6 +64,14 @@ function create() {
 
     sentence = game.add.text(0, 150, bout.sentence, { fill: '#fff', align: 'center', boundsAlignH: 'center' });
     sentence.setTextBounds(0, 0, 800, 600);
+
+    roundOverText = game.add.text(0, 150, '', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+    roundOverText.setTextBounds(0, 0, 800, 600);
+    socket.on('roundResult', function(roundResult) {
+        console.log(roundResult);
+        result = roundResult;
+        roundOver = true;
+    });
 }
 
 function update() {
@@ -79,6 +90,12 @@ function update() {
             });
         }
     };
+
+    if(roundOver) {
+        roundOver = false;
+        roundOverText.text = result === true ? 'Winner!' : 'Boooo! Loser!';
+        sentence.text = '';
+    }
 }
 
 module.exports = Game;
