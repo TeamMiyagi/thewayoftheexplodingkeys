@@ -18,6 +18,7 @@ var countDown;
 var boutStart = false;
 var oneSecond = 1;
 var previousTime;
+var gongSound;
 
 var Game = function(boutInfo, socketInfo) {
     bout = boutInfo;
@@ -44,9 +45,12 @@ var Game = function(boutInfo, socketInfo) {
 function preload() {
     console.log("boutInfo: ", bout);
     $('body').prepend($('<div>').addClass('mask'));
+
     game.load.spritesheet('player', 'assets/images/sprites/player-idle.png', 49, 52, 4);
     game.load.spritesheet('player-knockout', 'assets/images/sprites/player-knockout.png', 70, 70, 4);
     game.load.image("background", "assets/images/sprites/game-dojo.jpg", 0, 0, 800, 600);
+
+    game.load.audio('gong', 'assets/sounds/asianGongHit.mp3');
 }
 
 function create() {
@@ -87,6 +91,8 @@ function create() {
 
     countDown = game.add.text(0, 150, '3', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
     countDown.setTextBounds(0, 0, 800, 600);
+
+    gongSound = game.add.audio('gong');
 }
 
 function update() {
