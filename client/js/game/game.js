@@ -32,13 +32,14 @@ function preload() {
     console.log("boutInfo: ", bout);
     $('body').prepend($('<div>').addClass('mask'));
     game.load.spritesheet('player', 'assets/images/sprites/player-idle.png', 49, 52, 4);
+    // game.load.spritesheet('player', 'assets/images/sprites/player-knockout.png', 70, 70, 4);
     game.load.image("background", "assets/images/sprites/game-dojo.jpg", 0, 0, 800, 600);
 }
 
 function create() {
     game.stage.backgroundColor = 0xaaaaaa;
     game.add.tileSprite(0, 0, 800, 600, 'background');
-    
+
     $('.mask').fadeIn(500);
     $('canvas').addClass('game center-block');
 

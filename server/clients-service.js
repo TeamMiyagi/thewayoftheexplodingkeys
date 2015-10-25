@@ -1,4 +1,5 @@
 var connectedClients = {};
+var clientConnectionsLog = [];
 
 // TODO: make this by ID
 function addClient(playerName, socket) {
@@ -8,6 +9,8 @@ function addClient(playerName, socket) {
     };
 
     connectedClients[socket.id] = client;
+    // clientConnectionsLog.append('new player: ' + playerName + '. Total now ' + Object.keys(connectedClients).length);
+
     console.log(connectedClients);
 }
 
@@ -42,6 +45,10 @@ function setClientStatusById(id, status) {
     console.log(connectedClients);
 }
 
+function getLog() {
+    return clientConnectionsLog;
+}
+
 // Mutating functions
 module.exports.add = addClient;
 module.exports.remove = removeClient;
@@ -51,3 +58,4 @@ module.exports.clients = connectedClients;
 module.exports.getById = getClientById;
 module.exports.getWaitingClient = getWaitingClient;
 module.exports.setStatusById = setClientStatusById;
+module.exports.log = getLog();
