@@ -154,7 +154,9 @@ function connectedPlayersAsHtml() {
     var playerHtml = "";
 
     Object.keys(clientsMap).forEach(function(clientKey) {
-        playerHtml += "<span>" + clientsMap[clientKey].name + "</span>";
+        var status = clientsMap[clientKey].status || 'idle';
+        var statusText = ' (' + status + ')';
+        playerHtml += "<span>" + clientsMap[clientKey].name + statusText + "</span>";
     });
 
     return playerHtml;
