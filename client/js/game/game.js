@@ -14,6 +14,10 @@ var startOfRoundMs;
 var roundOver;
 var roundOverText;
 var result;
+var countDown;
+var boutStart = false;
+var oneSecond = 1;
+var previousTime;
 
 var Game = function(boutInfo, socketInfo) {
     bout = boutInfo;
@@ -70,6 +74,7 @@ function create() {
     startOfRoundMs = Date.now();
 
     sentence = game.add.text(0, 150, bout.sentence, { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+    sentence.alpha = 0.0;
     sentence.setTextBounds(0, 0, 800, 600);
 
     roundOverText = game.add.text(0, 150, '', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
@@ -79,36 +84,73 @@ function create() {
         result = roundResult;
         roundOver = true;
     });
+
+    countDown = game.add.text(0, 150, '3', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+    countDown.setTextBounds(0, 0, 800, 600);
 }
 
 function update() {
-    game.input.keyboard.onPressCallback = function(e) {
-        var currentCharacter;
-        if (e === sentenceChars[0]) {
-            currentCharacter = sentence.text.length - sentenceChars.length;
-            sentenceChars.shift();
-            sentence.addColor('#00ff00', currentCharacter);
-            if (sentenceChars.length) {
-                sentence.addColor('#fff', currentCharacter + 1);
-            }
-        }
-        if (e === '!') {
-            sentenceChars = "";
-        }
+    var countDownInt;
+    var deltaTime;
 
-        if(!sentenceChars.length) {
-            socket.emit('roundComplete', {
-                id: bout.id,
-                duration: Date.now() - startOfRoundMs
-            });
+    if (!previousTime) {
+        previousTime = game.time.now;
+    }
+
+    if (!boutStart) {
+        countDownInt = parseInt(countDown.text);
+        deltaTime = (game.time.now - previousTime) / 1000;
+        oneSecond -= deltaTime;
+
+        if (oneSecond < 0) {
+            console.log(parseInt(countDown.text));
+
+            if (parseInt(countDown.text) > 1) {
+                countDown.text = countDownInt - 1;
+            } else {
+                countDown.text = '';
+                boutStart = true;
+            }
+
+            oneSecond = 1;
         }
-    };
+    }
+
+    if (boutStart && !roundOver) {
+        game.input.keyboard.onPressCallback = function(e) {
+            var currentCharacter;
+
+            if (e === sentenceChars[0]) {
+                currentCharacter = sentence.text.length - sentenceChars.length;
+                sentenceChars.shift();
+                sentence.addColor('#00ff00', currentCharacter);
+                if (sentenceChars.length) {
+                    sentence.addColor('#fff', currentCharacter + 1);
+                }
+            }
+
+            if (e === '!') {
+                sentenceChars = "";
+            }
+
+            if(!sentenceChars.length) {
+                socket.emit('roundComplete', {
+                    id: bout.id,
+                    duration: Date.now() - startOfRoundMs
+                });
+            }
+        };
+
+        sentence.alpha = 1.0;
+    }
 
     if(roundOver) {
         roundOver = false;
         roundOverText.text = result === true ? 'Winner!' : 'Boooo! Loser!';
         sentence.text = '';
     }
+
+    previousTime = game.time.now;
 }
 
 module.exports = Game;
