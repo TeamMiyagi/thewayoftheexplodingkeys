@@ -58,6 +58,8 @@ function preload() {
     game.load.image("background", "assets/images/sprites/game-dojo.jpg", 0, 0, 800, 600);
 
     game.load.audio('gong', 'assets/sounds/asianGongHit.mp3');
+
+    game.stage.disableVisibilityChange = true;
 }
 
 function setUpPlayers() {
