@@ -149,23 +149,20 @@ function update() {
         roundOverText.text = (result ? 'Winner!' : 'Boooo! Loser!');
         sentence.text = '';
 
-        // Warning: here be hacks
+        // This is horrendous
+        var knockedOutPlayer = (result ? player2 : player1);
+        knockedOutPlayer.animations.stop('ready');
+        knockedOutPlayer.visible = false;
         if (!result) {
-            player1.animations.stop('ready');
-            player1.visible = false;
-            player1 = game.add.sprite(0, 300, 'player-knockout');
-            player1.scale.setTo(3, 3);
-            player1.animations.add('knockout', [0, 1, 2, 3], 6, false);
-            player1.animations.play('knockout');
+            knockedOutPlayer = game.add.sprite(0, 300, 'player-knockout');
+            knockedOutPlayer.scale.setTo(3, 3);
         }
         else {
-            player2.animations.stop('ready');
-            player2.visible = false;
-            player2 = game.add.sprite(800, 300, 'player-knockout');
-            player2.scale.setTo(-3, 3);
-            player2.animations.add('knockout', [0, 1, 2, 3], 6, false);
-            player2.animations.play('knockout');
+            knockedOutPlayer = game.add.sprite(800, 300, 'player-knockout');
+            knockedOutPlayer.scale.setTo(-3, 3);
         }
+        knockedOutPlayer.animations.add('knockout', [0, 1, 2, 3], 6, false);
+        knockedOutPlayer.animations.play('knockout');
     }
 
     previousTime = game.time.now;
