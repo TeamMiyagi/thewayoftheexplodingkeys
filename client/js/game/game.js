@@ -76,8 +76,14 @@ function create() {
 
 function update() {
     game.input.keyboard.onPressCallback = function(e) {
+        var currentCharacter;
         if (e === sentenceChars[0]) {
+            currentCharacter = sentence.text.length - sentenceChars.length;
             sentenceChars.shift();
+            sentence.addColor('#00ff00', currentCharacter);
+            if (sentenceChars.length) {
+                sentence.addColor('#fff', currentCharacter + 1);
+            }
         }
         if (e === '!') {
             sentenceChars = "";
