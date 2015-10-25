@@ -8,6 +8,7 @@ var Game = require('./game.js');
 var boutId;
 
 var socket;
+var playerId;
 
 function run(ip) {
     socket = io('http://' + ip +':3000');
@@ -34,6 +35,11 @@ function run(ip) {
 
     socket.on('loginEvent', function(loginEvent) {
         console.log(loginEvent);
+        playerId = loginEvent.player.id;
+    });
+
+    socket.on('connected', function(playerId) {
+
     });
 
     socket.on('boutStarted', function(boutStartedEvent) {
@@ -45,7 +51,7 @@ function run(ip) {
             $('#game').fadeIn();
         });
 
-        var game = new Game(boutStartedEvent, socket);
+        var game = new Game(boutStartedEvent, socket, playerId);
     });
 }
 

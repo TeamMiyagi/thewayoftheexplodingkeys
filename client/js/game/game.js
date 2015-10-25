@@ -1,6 +1,7 @@
 var bout;
 var game;
 var socket;
+var playerId;
 
 var knockedOutPlayer;
 var player1Text;
@@ -24,9 +25,10 @@ var gongSound;
 
 var state = 'COUNT_DOWN';
 
-var Game = function(boutInfo, socketInfo) {
+var Game = function(boutInfo, socketInfo, playerInfo) {
     bout = boutInfo;
     socket = socketInfo;
+    playerId = playerInfo;
 
     game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {
         preload: preload,
@@ -83,6 +85,8 @@ function setUpPlayers() {
 }
 
 function setUpPlayerLives() {
+    var i;
+
     if (player1Lives) {
         player1Lives.forEach(function(life) {
             life.destroy();
@@ -96,14 +100,30 @@ function setUpPlayerLives() {
     }
 
     player1Lives = [];
-    for (var i = 0; i < bout.player1.lives; i++) {
-        player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
-    }
-
     player2Lives = [];
-    for (i = 0; i < bout.player2.lives; i++) {
-        player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
+
+    if (isPlayer1(bout.player1.id)) {
+        console.log('i am player 1');
+        for (i = 0; i < bout.player1.lives; i++) {
+            player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
+        }
+        for (i = 0; i < bout.player2.lives; i++) {
+            player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
+        }
+    } else {
+        console.log('i am player 2');
+        for (i = 0; i < bout.player2.lives; i++) {
+            player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
+        }
+        for (i = 0; i < bout.player1.lives; i++) {
+            player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
+        }
     }
+}
+
+function isPlayer1(player1Id) {
+    console.log('player id: ', playerId, 'player1id: ', player1Id);
+    return playerId === player1Id;
 }
 
 function create() {
@@ -136,8 +156,6 @@ function create() {
         result = roundResult.didYouWin;
         state = 'ROUND_OVER';
 
-        var isPlayer1 = socket.id === roundResult.nextBount.player1.id;
-
         if (roundResult.nextBout.player1.lives === 0 ||
             roundResult.nextBout.player2.lives === 0) {
                 state = 'GAME_OVER';
@@ -148,16 +166,25 @@ function create() {
                     sentence.destroy();
                 }
 
-                if ((isPlayer1 && roundResult.nextBout.player1.lives === 0) ||
-                    (!isplayer1 && roundResult.nextBout.player2.lives === 0)) {
+                if (isPlayer1(roundResult.nextBout.player1.id)) {
+                    if (roundResult.nextBout.player1.lives === 0) {
                         sentence = game.add.text(0, 150, 'GAME OVER! \n YOU LOSE!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+                        sentence.setTextBounds(0, 0, 800, 600);
+                    } else {
+                        sentence = game.add.text(0, 150, 'GAME OVER! \n A WINNER IS YOU!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
                         sentence.setTextBounds(0, 0, 800, 600);
                     }
                 } else {
-                    sentence = game.add.text(0, 150, 'GAME OVER! \n A WINNER IS YOU!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
-                    sentence.setTextBounds(0, 0, 800, 600);
+                    if (roundResult.nextBout.player2.lives === 0) {
+                        sentence = game.add.text(0, 150, 'GAME OVER! \n YOU LOSE!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+                        sentence.setTextBounds(0, 0, 800, 600);
+                    } else {
+                        sentence = game.add.text(0, 150, 'GAME OVER! \n A WINNER IS YOU!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+                        sentence.setTextBounds(0, 0, 800, 600);
+                    }
                 }
 
+                console.log('yay');
                 // Add button to play again.
         } else {
             setTimeout(function() {

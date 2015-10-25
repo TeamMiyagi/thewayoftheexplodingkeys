@@ -45,7 +45,7 @@ io.on('connection', function (socket) {
 
     socket.on('new-player', function(playerName) {
         clientsService.add(playerName, socket);
-        socket.emit('loginEvent', createLoggedInEvent(playerName));
+        socket.emit('loginEvent', createLoggedInEvent(socket.id, playerName));
     });
 
     socket.on('findMatch', function() {
@@ -87,10 +87,11 @@ io.on('connection', function (socket) {
     });
 });
 
-function createLoggedInEvent(playerName) {
+function createLoggedInEvent(playerId, playerName) {
     return {
         type: 'loggedIn',
         player: {
+            id: playerId,
             name: playerName,
             rank: 1
         }
