@@ -161,8 +161,8 @@ function create() {
     $('.mask').fadeIn(500);
     $('canvas').addClass('game center-block');
 
-    player1Text = game.add.text(0, 0, bout.player1.name, { fill: '#fff' });
-    player2Text = game.add.text(0, 0, bout.player2.name, { fill: '#fff', align: 'right', boundsAlignH: 'right' });
+    player1Text = game.add.text(25, 10, bout.player1.name, { fill: '#fff' });
+    player2Text = game.add.text(-25, 10, bout.player2.name, { fill: '#fff', align: 'right', boundsAlignH: 'right' });
     player2Text.setTextBounds(0, 0, 800, 600);
 
     setUpPlayerLives();
@@ -171,9 +171,10 @@ function create() {
     sentenceChars = bout.sentence.split('');
     startOfRoundMs = Date.now();
 
-    sentence = game.add.text(0, 150, bout.sentence, { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+    sentence = game.add.text(game.world.centerX, 150, bout.sentence, { fill: '#fff', align: 'center'});
+    sentence.anchor.set(0.5);
     sentence.alpha = 0.0;
-    sentence.setTextBounds(0, 0, 800, 600);
+    //sentence.setTextBounds(0, 0, 800, 600);
 
     roundOverText = game.add.text(0, 150, '', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
     roundOverText.setTextBounds(0, 0, 800, 600);
@@ -221,7 +222,8 @@ function create() {
                 setUpPlayerLives();
                 setUpPlayers();
                 sentenceChars = bout.sentence.split('');
-                sentence = game.add.text(0, 150, bout.sentence, { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+                sentence = game.add.text(game.world.centerX, 150, bout.sentence, { fill: '#fff', align: 'center'});
+                sentence.anchor.set(0.5);
                 sentence.alpha = 0.0;
                 sentence.setTextBounds(0, 0, 800, 600);
                 startOfRoundMs = Date.now();
@@ -284,6 +286,9 @@ function update() {
             }
 
             if(!sentenceChars.length) {
+                // Add a simple bounce tween to each character's position.
+                var tween = game.add.tween(sentence.scale).to( { y: 1.25, x: 1.25 }, 500, Phaser.Easing.Bounce.Out, true);
+
                 socket.emit('roundComplete', {
                     id: bout.id,
                     duration: Date.now() - startOfRoundMs
@@ -299,20 +304,6 @@ function update() {
         //roundOver = false;
         roundOverText.text = result === true ? 'Winner!' : 'Boooo! Loser!';
         sentence.text = '';
-
-        // This is horrendous
-        // knockedOutPlayer = (result ? player2 : player1);
-        // knockedOutPlayer.animations.stop('ready');
-        // knockedOutPlayer.visible = false;
-        //
-        // if (!result) {
-        //     knockedOutPlayer = game.add.sprite(0, 300, 'player-knockout');
-        //     knockedOutPlayer.scale.setTo(3, 3);
-        // }
-        // else {
-        //     knockedOutPlayer = game.add.sprite(800, 300, 'player-knockout');
-        //     knockedOutPlayer.scale.setTo(-3, 3);
-        // }
 
         setUpKnockedDownPlayer();
 
