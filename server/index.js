@@ -78,7 +78,7 @@ io.on('connection', function (socket) {
                 didYouWin: roundStatus.player1Won,
                 nextBout: bout
             });
-            io.sockets.connected[bout.player2.id].emit('roundResult', r{
+            io.sockets.connected[bout.player2.id].emit('roundResult', {
                 didYouWin: roundStatus.player2Won,
                 nextBout: bout
             });
