@@ -4,7 +4,8 @@ var connectedClients = {};
 function addClient(playerName, socket) {
     var client = {
         name: playerName,
-        id: socket.id
+        id: socket.id,
+        status: 'idle'
     };
 
     connectedClients[socket.id] = client;
@@ -26,8 +27,9 @@ function getWaitingClient() {
 
 // TODO: make this by id
 function removeClient(socket) {
+    console.log('clients before: ', connectedClients);
     delete connectedClients[socket.id];
-    console.log(connectedClients);
+    console.log('clients after: ', connectedClients);
 }
 
 function getClientById(id) {

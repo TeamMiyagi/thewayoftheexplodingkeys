@@ -99,6 +99,10 @@ io.on('connection', function (socket) {
     socket.on('gameOver', function() {
         boutsService.deleteBouts(socket.id);
     });
+
+    socket.on('endGame', function() {
+        clientsService.setStatusById(socket.id, 'idle');
+    });
 });
 
 function createLoggedInEvent(playerId, playerName) {

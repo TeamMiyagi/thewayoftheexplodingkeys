@@ -49,6 +49,7 @@ function run(ip) {
             $('#game').fadeIn();
         });
 
+        console.log('boutStarted listener is called');
         var game = new Game(boutStartedEvent, socket, playerId, endGameHandler);
     });
 }
@@ -74,10 +75,11 @@ function handleLogin(response) {
 
 
 function endGameHandler() {
-    console.log("?");
-    $('#game').hide();
+    $('#game').empty().hide();
     $('#mask').fadeOut(500);
-
     $('header').show();
+
+    socket.emit('endGame');
+
     startGame();
 }
