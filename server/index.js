@@ -40,6 +40,7 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function() {
         console.log('User disconnected');
+        boutsService.deleteBouts(socket.id);
         clientsService.remove(socket);
     });
 
