@@ -2,6 +2,7 @@ var bout;
 var game;
 var socket;
 
+var knockedOutPlayer;
 var player1Text;
 var player2Text;
 var player1Lives;
@@ -57,25 +58,17 @@ function preload() {
     game.load.audio('gong', 'assets/sounds/asianGongHit.mp3');
 }
 
-function create() {
-    game.stage.backgroundColor = 0xaaaaaa;
-    game.add.tileSprite(0, 0, 800, 600, 'background');
-
-    $('.mask').fadeIn(500);
-    $('canvas').addClass('game center-block');
-
-    player1Text = game.add.text(0, 0, bout.player1.name, { fill: '#fff' });
-    player2Text = game.add.text(0, 0, bout.player2.name, { fill: '#fff', align: 'right', boundsAlignH: 'right' });
-    player2Text.setTextBounds(0, 0, 800, 600);
-
-    player1Lives = [];
-    for (var i = 0; i < bout.player1.lives; i++) {
-        player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
+function setUpPlayers() {
+    if (knockedOutPlayer) {
+        knockedOutPlayer.destroy();
     }
 
-    player2Lives = [];
-    for (i = 0; i < bout.player2.lives; i++) {
-        player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
+    if (player1) {
+        player1.destroy();
+    }
+
+    if (player2) {
+        player2.destroy();
     }
 
     player1 = game.add.sprite(0, 300, 'player');
@@ -87,6 +80,45 @@ function create() {
     player2.scale.setTo(-3, 3);
     player2.animations.add('ready', [0, 1, 2, 3, 2, 1], 3, true);
     player2.animations.play('ready');
+}
+
+function setUpPlayerLives() {
+    if (player1Lives) {
+        player1Lives.forEach(function(life) {
+            life.destroy();
+        });
+    }
+
+    if (player2Lives) {
+        player2Lives.forEach(function(life) {
+            life.destroy();
+        });
+    }
+
+    player1Lives = [];
+    for (var i = 0; i < bout.player1.lives; i++) {
+        player1Lives.push(game.add.sprite(20 + (40 * i), 50, 'player-life'));
+    }
+
+    player2Lives = [];
+    for (i = 0; i < bout.player2.lives; i++) {
+        player2Lives.push(game.add.sprite(750 - (40 * i), 50, 'player-life'));
+    }
+}
+
+function create() {
+    game.stage.backgroundColor = 0xaaaaaa;
+    game.add.tileSprite(0, 0, 800, 600, 'background');
+
+    $('.mask').fadeIn(500);
+    $('canvas').addClass('game center-block');
+
+    player1Text = game.add.text(0, 0, bout.player1.name, { fill: '#fff' });
+    player2Text = game.add.text(0, 0, bout.player2.name, { fill: '#fff', align: 'right', boundsAlignH: 'right' });
+    player2Text.setTextBounds(0, 0, 800, 600);
+
+    setUpPlayerLives();
+    setUpPlayers();
 
     sentenceChars = bout.sentence.split('');
     startOfRoundMs = Date.now();
@@ -97,10 +129,51 @@ function create() {
 
     roundOverText = game.add.text(0, 150, '', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
     roundOverText.setTextBounds(0, 0, 800, 600);
+
     socket.on('roundResult', function(roundResult) {
         console.log(roundResult);
+
         result = roundResult.didYouWin;
         state = 'ROUND_OVER';
+
+        var isPlayer1 = socket.id === roundResult.nextBount.player1.id;
+
+        if (roundResult.nextBout.player1.lives === 0 ||
+            roundResult.nextBout.player2.lives === 0) {
+                state = 'GAME_OVER';
+
+                setUpPlayerLives();
+
+                if (sentence) {
+                    sentence.destroy();
+                }
+
+                if ((isPlayer1 && roundResult.nextBout.player1.lives === 0) ||
+                    (!isplayer1 && roundResult.nextBout.player2.lives === 0)) {
+                        sentence = game.add.text(0, 150, 'GAME OVER! \n YOU LOSE!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+                        sentence.setTextBounds(0, 0, 800, 600);
+                    }
+                } else {
+                    sentence = game.add.text(0, 150, 'GAME OVER! \n A WINNER IS YOU!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+                    sentence.setTextBounds(0, 0, 800, 600);
+                }
+
+                // Add button to play again.
+        } else {
+            setTimeout(function() {
+                bout = roundResult.nextBout;
+                setUpPlayerLives();
+                setUpPlayers();
+                sentenceChars = bout.sentence.split('');
+                sentence = game.add.text(0, 150, bout.sentence, { fill: '#fff', align: 'center', boundsAlignH: 'center' });
+                sentence.alpha = 0.0;
+                sentence.setTextBounds(0, 0, 800, 600);
+                startOfRoundMs = Date.now();
+                roundOverText.text = '';
+                countDown.text = '3';
+                state = 'COUNT_DOWN';
+            }, 5000);
+        }
     });
 
     countDown = game.add.text(0, 150, '3', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
@@ -172,7 +245,7 @@ function update() {
         sentence.text = '';
 
         // This is horrendous
-        var knockedOutPlayer = (result ? player2 : player1);
+        knockedOutPlayer = (result ? player2 : player1);
         knockedOutPlayer.animations.stop('ready');
         knockedOutPlayer.visible = false;
 

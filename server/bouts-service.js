@@ -73,6 +73,7 @@ function updateLives(bout) {
 function getRoundStatus(boutId) {
     var bout = bouts[boutId];
     var completed = (bout.player1Duration && bout.player2Duration);
+    console.log(completed);
     return {
         isComplete: completed,
         player1Won: bout.player1Duration < bout.player2Duration,
