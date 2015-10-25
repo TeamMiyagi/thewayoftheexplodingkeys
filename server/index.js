@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
         if (roundStatus.isComplete) {
             console.log('Round complete!');
             var bout = boutsService.get(roundCompleteMsg.id);
-            boutsService.resetDurations(bout);
+            boutsService.resetBout(bout, sentenceService.get());
             io.sockets.connected[bout.player1.id].emit('roundResult', {
                 didYouWin: roundStatus.player1Won,
                 nextBout: bout
