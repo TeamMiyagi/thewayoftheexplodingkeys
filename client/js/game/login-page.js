@@ -62,7 +62,7 @@ function startGame() {
 
 function handleLogin(response) {
     // console.log(loginEvent);
-    // playerId = loginEvent.player.id;
+    playerId = response.player.id;
     if (response.success) {
         $('#welcomeDiv').hide();
         $('#playerName').text(response.player.name);
