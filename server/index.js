@@ -85,6 +85,7 @@ io.on('connection', function (socket) {
         var roundStatus = boutsService.getRoundStatus(roundCompleteMsg.id);
         if (roundStatus.isComplete) {
             console.log('Round complete!');
+            updateStatsForPlayers(roundCompleteMsg.id);
             var bout = boutsService.get(roundCompleteMsg.id);
             boutsService.resetBout(bout, sentenceService.get());
             io.sockets.connected[bout.player1.id].emit('roundResult', {
@@ -106,6 +107,10 @@ io.on('connection', function (socket) {
         clientsService.setStatusById(socket.id, 'idle');
     });
 });
+
+function updateStatsForPlayers(boutId) {
+    // TODO
+}
 
 function createLoggedInEvent(playerId, playerName) {
     return {
