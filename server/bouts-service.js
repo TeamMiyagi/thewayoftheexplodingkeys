@@ -85,6 +85,10 @@ function getBout(boutId) {
     return bouts[boutId];
 }
 
+function getBouts(boutId) {
+    return bouts;
+}
+
 function deleteBoutsByPlayerId(playerId) {
     collectBoutsIdsByPlayerId(playerId).forEach(function(id) {
         delete bouts[id];
@@ -106,9 +110,13 @@ function collectBoutsIdsByPlayerId(playerId) {
     return boutIds;
 }
 
-module.exports.create = createBout;
-module.exports.update = updateBout;
+// Accessor functions
 module.exports.get = getBout;
 module.exports.getRoundStatus = getRoundStatus;
+module.exports.bouts = getBouts;
+
+// Mutator functions
+module.exports.create = createBout;
+module.exports.update = updateBout;
 module.exports.resetBout = resetBout;
 module.exports.deleteBouts = deleteBoutsByPlayerId;

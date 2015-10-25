@@ -28,6 +28,10 @@ app.get('/clients', function(req, res) {
     res.json(clientsService.clients());
 });
 
+app.get('/status', function(req, res) {
+    res.send(generateStatus());
+});
+
 server = http.listen(3000, function() {
     var port = server.address().port;
 
@@ -120,4 +124,50 @@ function startBout(player1Id, player2Id) {
 
     io.sockets.connected[player1.id].emit('boutStarted', player1Msg);
     io.sockets.connected[player2.id].emit('boutStarted', player2Msg);
+}
+
+function generateStatus() {
+    return "<html>" +
+            "<head>" +
+                "<title>TWOTEK Status</title>" +
+                '<style>' +
+                    'body {background-color:lightgray}' +
+                    'span {display: block}' +
+                '</style>' +
+            "</head>" +
+            "<body>" +
+                "<h1>TWOTEK Status</h1>" +
+                "<div>" +
+                    "<h2>Connected players</h2>" +
+                    connectedPlayersAsHtml() +
+                "</div>" +
+                "<div>" +
+                    "<h2>Bouts in progress</h2>" +
+                    boutsAsHtml() +
+                "</div>" +
+            "</body>" +
+            "</html>";
+}
+
+function connectedPlayersAsHtml() {
+    var clientsMap = clientsService.clients();
+    var playerHtml = "";
+
+    Object.keys(clientsMap).forEach(function(clientKey) {
+        playerHtml += "<span>" + clientsMap[clientKey].name + "</span>";
+    });
+
+    return playerHtml;
+}
+
+function boutsAsHtml() {
+    var boutsMap = boutsService.bouts();
+    var boutsHtml = "";
+
+    Object.keys(boutsMap).forEach(function(boutKey) {
+        bout = boutsMap[boutKey];
+        boutsHtml += '<span>' + bout.player1.name + ' versus ' + bout.player2.name + '</span>';
+    });
+
+    return boutsHtml;
 }
