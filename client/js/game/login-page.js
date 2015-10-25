@@ -33,13 +33,11 @@ function run(ip) {
         $('#findingMatch').show();
     });
 
-    socket.on('loginEvent', function(loginEvent) {
-        console.log(loginEvent);
-        playerId = loginEvent.player.id;
+    socket.on('loginEvent', function(response) {
+        handleLogin(response);
     });
 
     socket.on('connected', function(playerId) {
-
     });
 
     socket.on('boutStarted', function(boutStartedEvent) {
@@ -55,15 +53,25 @@ function run(ip) {
     });
 }
 
+
 function startGame() {
     var playerName = $('#welcomeDiv input').val();
     socket.emit('new-player', playerName);
-
-    $('#welcomeDiv').hide();    // TODO: use class
-
-    $('#playerName').text(playerName);
-    $('#startGameDiv').show();
 }
+
+function handleLogin(response) {
+    // console.log(loginEvent);
+    // playerId = loginEvent.player.id;
+    if (response.success) {
+        $('#welcomeDiv').hide();
+        $('#playerName').text(response.player.name);
+        $('#startGameDiv').show();
+    }
+    else {
+        console.log("Sorry, name taken");
+    }
+}
+
 
 function endGameHandler() {
     console.log("?");

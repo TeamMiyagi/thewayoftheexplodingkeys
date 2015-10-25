@@ -34,6 +34,18 @@ function getClientById(id) {
     return connectedClients[id];
 }
 
+function doesPlayerAlreadyExist(playerName) {
+    var alreadyExists = false;
+    Object.keys(connectedClients).forEach(function(clientId) {
+        var client = connectedClients[clientId];
+        if (client.name === playerName) {
+            alreadyExists = true;
+        }
+    });
+
+    return alreadyExists;
+}
+
 function setClientStatusById(id, status) {
     var client = connectedClients[id];
     if (client) {
@@ -56,3 +68,4 @@ module.exports.clients = getClients;
 module.exports.getById = getClientById;
 module.exports.getWaitingClient = getWaitingClient;
 module.exports.setStatusById = setClientStatusById;
+module.exports.doesPlayerAlreadyExist = doesPlayerAlreadyExist;

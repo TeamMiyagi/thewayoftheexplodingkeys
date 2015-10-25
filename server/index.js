@@ -49,8 +49,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on('new-player', function(playerName) {
-        clientsService.add(playerName, socket);
-        socket.emit('loginEvent', createLoggedInEvent(socket.id, playerName));
+        if (clientsService.doesPlayerAlreadyExist(playerName)) {
+            socket.emit('loginEvent', { success: false });
+        }
+        else {
+            clientsService.add(playerName, socket);
+            socket.emit('loginEvent', createLoggedInEvent(socket.id, playerName));
+        }
     });
 
     socket.on('findMatch', function() {
@@ -98,7 +103,8 @@ io.on('connection', function (socket) {
 
 function createLoggedInEvent(playerId, playerName) {
     return {
-        type: 'loggedIn',
+        type: 'loggedIn',   // probably not used
+        success: true,
         player: {
             id: playerId,
             name: playerName,
