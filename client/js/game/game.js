@@ -187,6 +187,9 @@ function create() {
 
         if (roundResult.nextBout.player1.lives === 0 ||
             roundResult.nextBout.player2.lives === 0) {
+
+                socket.emit('gameOver');
+
                 state = 'GAME_OVER';
 
                 setUpPlayerLives();

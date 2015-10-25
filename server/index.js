@@ -86,6 +86,10 @@ io.on('connection', function (socket) {
             });
         }
     });
+
+    socket.on('gameOver', function() {
+        boutsService.deleteBouts(socket.id);
+    });
 });
 
 function createLoggedInEvent(playerId, playerName) {
