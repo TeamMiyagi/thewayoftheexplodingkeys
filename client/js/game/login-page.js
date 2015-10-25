@@ -51,7 +51,7 @@ function run(ip) {
             $('#game').fadeIn();
         });
 
-        var game = new Game(boutStartedEvent, socket, playerId);
+        var game = new Game(boutStartedEvent, socket, playerId, endGameHandler);
     });
 }
 
@@ -63,4 +63,13 @@ function startGame() {
 
     $('#playerName').text(playerName);
     $('#startGameDiv').show();
+}
+
+function endGameHandler() {
+    console.log("?");
+    $('#game').hide();
+    $('#mask').fadeOut(500);
+
+    $('header').show();
+    startGame();
 }

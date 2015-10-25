@@ -59,7 +59,7 @@ canvas.game {
     margin-top: 50px;
 }
 
-.mask {
+#mask {
     position: absolute;
     background-color: #000;
     display: none;

@@ -2,6 +2,7 @@ var bout;
 var game;
 var socket;
 var playerId;
+var endGameHandlerFunction;
 
 var knockedOutPlayer;
 var player1Text;
@@ -22,13 +23,15 @@ var countDown;
 var oneSecond = 1;
 var previousTime;
 var gongSound;
+var finishGameButton;
 
 var state = 'COUNT_DOWN';
 
-var Game = function(boutInfo, socketInfo, playerInfo) {
+var Game = function(boutInfo, socketInfo, playerInfo, endGameHandler) {
     bout = boutInfo;
     socket = socketInfo;
     playerId = playerInfo;
+    endGameHandlerFunction = endGameHandler;
 
     game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {
         preload: preload,
@@ -50,12 +53,13 @@ var Game = function(boutInfo, socketInfo, playerInfo) {
 
 function preload() {
     console.log("boutInfo: ", bout);
-    $('body').prepend($('<div>').addClass('mask'));
+    // $('body').prepend($('<div>').addClass('mask'));
 
     game.load.spritesheet('player', 'assets/images/sprites/player-idle.png', 49, 52, 4);
     game.load.spritesheet('player-knockout', 'assets/images/sprites/player-knockout.png', 70, 70, 4);
     game.load.image('player-life', 'assets/images/sprites/life.png', 29, 30);
     game.load.image("background", "assets/images/sprites/game-dojo.jpg", 0, 0, 800, 600);
+    game.load.image('scroll', 'assets/images/scrollBackgroundThin.png', 100, 50);
 
     game.load.audio('gong', 'assets/sounds/asianGongHit.mp3');
 }
@@ -152,7 +156,7 @@ function create() {
     game.stage.backgroundColor = 0xaaaaaa;
     game.add.tileSprite(0, 0, 800, 600, 'background');
 
-    $('.mask').fadeIn(500);
+    $('#mask').fadeIn(500);
     $('canvas').addClass('game center-block');
 
     player1Text = game.add.text(0, 0, bout.player1.name, { fill: '#fff' });
@@ -208,8 +212,14 @@ function create() {
                 }
 
                 console.log('yay');
-                // Add button to play again.
-        } else {
+                setTimeout(function() {
+                    finishGameButton = game.add.button(200, 300, 'scroll', endGameHandlerFunction, this);//, 2, 1, 0);
+                    var text = game.add.text(30, 50, "Click to return to find another opponent", {font: "24px Arial", fill: "#404040"});
+                    finishGameButton.addChild(text);
+                },
+                3000);
+        }
+        else {
             setTimeout(function() {
                 bout = roundResult.nextBout;
                 setUpPlayerLives();
@@ -231,6 +241,10 @@ function create() {
 
     gongSound = game.add.audio('gong');
 }
+
+// function finishGameAction() {
+//     console.log("Button clicked!");
+// }
 
 function update() {
     var countDownInt;
@@ -294,26 +308,9 @@ function update() {
         roundOverText.text = result === true ? 'Winner!' : 'Boooo! Loser!';
         sentence.text = '';
 
-        // This is horrendous
-        // knockedOutPlayer = (result ? player2 : player1);
-        // knockedOutPlayer.animations.stop('ready');
-        // knockedOutPlayer.visible = false;
-        //
-        // if (!result) {
-        //     knockedOutPlayer = game.add.sprite(0, 300, 'player-knockout');
-        //     knockedOutPlayer.scale.setTo(3, 3);
-        // }
-        // else {
-        //     knockedOutPlayer = game.add.sprite(800, 300, 'player-knockout');
-        //     knockedOutPlayer.scale.setTo(-3, 3);
-        // }
-
         setUpKnockedDownPlayer();
 
         state = 'SOMETHING_ELSE'; // TODO: uhh, probably want to fix this...
-
-        // knockedOutPlayer.animations.add('knockout', [0, 1, 2, 3], 6, false);
-        // knockedOutPlayer.animations.play('knockout');
     }
 
     previousTime = game.time.now;
