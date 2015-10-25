@@ -31,25 +31,37 @@ function updateBout(socketId, roundCompleteMsg) {
 
     var bout = bouts[roundCompleteMsg.id];
     if (!bout) {
-        console.log("Failed to find bout to update");
+        console.log('Failed to find bout to update');
         return;
     }
 
-    console.log(socketId);
+    updateDurations(socketId, bout, roundCompleteMsg.duration);
 
-    if (bout.player1.id === socketId) {
-        bout.player1Duration = roundCompleteMsg.duration;
-        console.log("player1 duration set");
-    }
-    else if (bout.player2.id === socketId) {
-        bout.player2Duration = roundCompleteMsg.duration;
-        console.log("player2 duration set");
-    }
-    else {
-        console.log("Ouch, no idea who just completed a bout");
-    }
+    updateLives(bout);
 
-    console.log("Updated bout: " + JSON.stringify(bout));
+    console.log('Updated bout: ' + JSON.stringify(bout));
+}
+
+function updateDurations(playerId, bout, duration) {
+    if (bout.player1.id === playerId) {
+        bout.player1Duration = duration;
+        console.log('player1 duration set');
+    }
+    else if (bout.player2.id === playerId) {
+        bout.player2Duration = duration;
+        console.log('player2 duration set');
+    }
+}
+
+function updateLives(bout) {
+    var roundStatus = getRoundStatus(bout.id);
+    if (roundStatus.isComplete) {
+        if (roundStatus.player1Won) {
+            bout.player2.lives -= 1;
+        } else {
+            bout.player1.lives -= 1;
+        }
+    }
 }
 
 function getRoundStatus(boutId) {

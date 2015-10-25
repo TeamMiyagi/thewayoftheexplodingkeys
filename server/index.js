@@ -74,9 +74,14 @@ io.on('connection', function (socket) {
         if (roundStatus.isComplete) {
             console.log('Round complete!');
             var bout = boutsService.get(roundCompleteMsg.id);
-
-            io.sockets.connected[bout.player1.id].emit('roundResult', roundStatus.player1Won);
-            io.sockets.connected[bout.player2.id].emit('roundResult', roundStatus.player2Won);
+            io.sockets.connected[bout.player1.id].emit('roundResult', {
+                didYouWin: roundStatus.player1Won,
+                nextBout: bout
+            });
+            io.sockets.connected[bout.player2.id].emit('roundResult', r{
+                didYouWin: roundStatus.player2Won,
+                nextBout: bout
+            });
         }
     });
 });
