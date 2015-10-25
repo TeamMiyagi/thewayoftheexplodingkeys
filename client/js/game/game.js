@@ -206,27 +206,30 @@ function create() {
 
                 if (isPlayer1(roundResult.nextBout.player1.id)) {
                     if (roundResult.nextBout.player1.lives === 0) {
-                        sentence = game.add.text(0, 150, 'GAME OVER! \n YOU LOSE!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
-                        sentence.setTextBounds(0, 0, 800, 600);
+                        sentence = game.add.text(game.world.centerX, 150, 'GAME OVER!\nYOU LOSE!', { fill: '#fff', align: 'center'});
+                        sentence.anchor.set(0.5);
                     } else {
-                        sentence = game.add.text(0, 150, 'GAME OVER! \n A WINNER IS YOU!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
-                        sentence.setTextBounds(0, 0, 800, 600);
+                        sentence = game.add.text(game.world.centerX, 150, 'GAME OVER!\nA WINNER IS YOU!', { fill: '#fff', align: 'center'});
+                        sentence.anchor.set(0.5);
                     }
                 } else {
                     if (roundResult.nextBout.player2.lives === 0) {
-                        sentence = game.add.text(0, 150, 'GAME OVER! \n YOU LOSE!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
-                        sentence.setTextBounds(0, 0, 800, 600);
+                        sentence = game.add.text(game.world.centerX, 150, 'GAME OVER!\nYOU LOSE!', { fill: '#fff', align: 'center'});
+                        sentence.anchor.set(0.5);
                     } else {
-                        sentence = game.add.text(0, 150, 'GAME OVER! \n A WINNER IS YOU!', { fill: '#fff', align: 'center', boundsAlignH: 'center' });
-                        sentence.setTextBounds(0, 0, 800, 600);
+                        sentence = game.add.text(game.world.centerX, 150, 'GAME OVER!\nA WINNER IS YOU!', { fill: '#fff', align: 'center'});
+                        sentence.anchor.set(0.5);
                     }
                 }
 
                 console.log('yay');
                 setTimeout(function() {
-                    finishGameButton = game.add.button(200, 300, 'scroll', endGameHandlerFunction, this);//, 2, 1, 0);
-                    var text = game.add.text(30, 50, "Click to return to find another opponent", {font: "24px Arial", fill: "#404040"});
-                    finishGameButton.addChild(text);
+                    finishGameButton = game.add.button(game.world.centerX, 300, 'scroll', endGameHandlerFunction, this);
+                    finishGameButton.anchor.set(0.5);
+                    var text = game.add.text(game.world.centerX, 300, "Find another opponent!", {font: "32px Arial", fill: "#404040"});
+                    text.anchor.set(0.5);
+                    //finishGameButton.addChild(text);
+
                 },
                 3000);
         }
