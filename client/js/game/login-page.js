@@ -34,13 +34,16 @@ function run(ip) {
     });
 
     socket.on('loginEvent', function(response) {
+        console.log('loginEvent');
         handleLogin(response);
     });
 
     socket.on('connected', function(playerId) {
+        console.log('connected');
     });
 
     socket.on('boutStarted', function(boutStartedEvent) {
+        console.log('boutStarted');
         console.log(boutStartedEvent);
         boutId = boutStartedEvent.id;
 
@@ -56,12 +59,13 @@ function run(ip) {
 
 
 function startGame() {
+    console.log('startGame called');
     var playerName = $('#welcomeDiv input').val();
     socket.emit('new-player', playerName);
 }
 
 function handleLogin(response) {
-    // console.log(loginEvent);
+    console.log('handleLogin. response = ' + JSON.stringify(response));
     playerId = response.player.id;
     if (response.success) {
         $('#welcomeDiv').hide();

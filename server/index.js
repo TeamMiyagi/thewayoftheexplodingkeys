@@ -8,6 +8,8 @@ var ip = require('ip').address();
 // var boutsService = require('./bouts-service');
 // var playersService = require('./players-service');
 var gameService = require('./gameservice');
+console.log(gameService);
+
 
 app.use(express.static(__dirname + '/../client'));
 app.use('/public', express.static(__dirname + '/../public'));
@@ -51,12 +53,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on('new-player', function(playerName) {
+        logSocketMsg('new-player');
         if (gameService.doesPlayerAlreadyExist(playerName)) {
         // if (clientsService.doesPlayerAlreadyExist(playerName)) {
             socket.emit('loginEvent', { success: false });
         }
         else {
-            gameService.add(playerName);
+            gameService.addPlayer(playerName, socket.id);
             // was
             // playersService.add(playerName);
             // clientsService.add(playerName, socket);
@@ -65,12 +68,12 @@ io.on('connection', function (socket) {
     });
 
     socket.on('findMatch', function() {
-        console.log("findMatch");
-        var sourceClient = gameService.getClientById(socket.id);
+        logSocketMsg('findMatch');
+        // var sourceClient = gameService.getClientById(socket.id);
         // was: var sourceClient = clientsService.getById(socket.id);
-
-        var opponent = gameService.getWaitingClient();
+        // var opponent = gameService.getWaitingClient();
         // var opponent = clientsService.getWaitingClient();
+        var opponent = gameService.findOpponent();
         if (opponent) {
             gameService.startBout(socked.it, opponent.id);
             // was:
@@ -88,7 +91,8 @@ io.on('connection', function (socket) {
     });
 
     socket.on('roundComplete', function(roundCompleteMsg) {
-        console.log('roundComplete: ' + roundCompleteMsg);
+        logSocketMsg('new-player');
+        // console.log('roundComplete: ' + roundCompleteMsg);
         gameService.updateBoutStatus(socket.id, roundCompleteMsg);
         // was: boutsService.update(socket.id, roundCompleteMsg);
 
@@ -111,11 +115,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on('gameOver', function() {
+        logSocketMsg('gameOver');
         gameService.gameOver(socket.id);
         // was boutsService.deleteBouts(socket.id);
     });
 
     socket.on('endGame', function() {
+        logSocketMsg('endGame');
         gameService.endGame(socket.id);
         // clientsService.setStatusById(socket.id, 'idle');
     });
@@ -132,7 +138,7 @@ function createLoggedInEvent(playerId, playerName) {
         player: {
             id: playerId,
             name: playerName,
-            stats: playersService.stats(playerName)
+            stats: gameService.playerStats(playerName)
         }
     };
 }
@@ -154,4 +160,8 @@ function startBout(player1Id, player2Id) {
 
     io.sockets.connected[player1.id].emit('boutStarted', player1Msg);
     io.sockets.connected[player2.id].emit('boutStarted', player2Msg);
+}
+
+function logSocketMsg(msgTitle) {
+    console.log('received socket message: **' + msgTitle + '**');
 }

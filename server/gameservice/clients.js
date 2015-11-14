@@ -1,14 +1,13 @@
 var connectedClients = {};
 
-// TODO: make this by ID
-function addClient(playerName, socket) {
+function addClient(playerName, socket_id) {
     var client = {
         name: playerName,
-        id: socket.id,
+        id: socket_id,
         status: 'idle'
     };
 
-    connectedClients[socket.id] = client;
+    connectedClients[socket_id] = client;
 
     console.log(connectedClients);
 }
