@@ -33,8 +33,23 @@ function getPlayerStats(playerName) {
 }
 
 function findOpponent() {
-    // TODO...
+    return clientsService.getWaitingClient();
 }
+
+function setClientStatus(socket_id, status) {
+    clientsService.setClientStatusById(socket_id, status);
+}
+
+function startBout(player1_id, player2_id) {
+    clientsService.setClientStatusById(player1_id, "fighting");
+    clientsService.setClientStatusById(player2_id, "fighting");
+
+    var player1 = clientsService.getById(player1Id);
+    var player2 = clientsService.getById(player2Id);
+    return boutsService.create(player1, player2, 'wax on, wax off'/*sentenceService.get()*/);
+}
+
+
 
 //////////////////////////////////
 
@@ -42,16 +57,18 @@ function stubbedFunction(functionName) {
     console.log('Stubbed function called! (' + functionName + ')');
 }
 
+
 //////////////////////////////////
-// Exports
-//////////////////////////////////
-// Accessor
+// Exported accessors
 module.exports.clients = getClients;
 module.exports.status = getStatus;
 module.exports.doesPlayerAlreadyExist = doesPlayerAlreadyExist;
 module.exports.playerStats = getPlayerStats;
 module.exports.findOpponent = findOpponent;
 
-// Mutator
+//////////////////////////////////
+// Exported mutators
 module.exports.disconnectUser = disconnectUser;
 module.exports.addPlayer = addPlayer;
+module.exports.setClientStatus = setClientStatus;
+module.exports.startBout = startBout;

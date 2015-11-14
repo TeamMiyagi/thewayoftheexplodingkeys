@@ -69,22 +69,23 @@ io.on('connection', function (socket) {
 
     socket.on('findMatch', function() {
         logSocketMsg('findMatch');
-        // var sourceClient = gameService.getClientById(socket.id);
-        // was: var sourceClient = clientsService.getById(socket.id);
-        // var opponent = gameService.getWaitingClient();
-        // var opponent = clientsService.getWaitingClient();
         var opponent = gameService.findOpponent();
+
         if (opponent) {
-            gameService.startBout(socked.it, opponent.id);
-            // was:
-            // clientsService.setStatusById(socket.id, "fighting");
-            // clientsService.setStatusById(opponent.id, "fighting");
-            // startBout(socket.id, opponent.id);
+            var bout = gameService.startBout(socket.id, opponent.id);
+            var player1Msg = bout;
+            var player2Msg = {
+                id: bout.id,
+                player1: bout.player2,
+                player2: bout.player1,
+                sentence: bout.sentence
+            };
+
+            io.sockets.connected[socket.id].emit('boutStarted', player1Msg);
+            io.sockets.connected[opponent.id].emit('boutStarted', player2Msg);
         }
         else {
-            console.log("About to call clientsService.setStatusById, " + socket.id);
-            gameService.setStatusById(socket.id, "findingMatch");
-            // clientsService.setStatusById(socket.id, "findingMatch");
+            gameService.setClientStatus(socket.id, 'findingMatch');
         }
 
         console.log("findMatch end");
@@ -143,24 +144,24 @@ function createLoggedInEvent(playerId, playerName) {
     };
 }
 
-function startBout(player1Id, player2Id) {
-    console.log("startBout");
-    var player1 = clientsService.getById(player1Id);
-    var player2 = clientsService.getById(player2Id);
-
-    var bout = boutsService.create(player1, player2, sentenceService.get());
-
-    var player1Msg = bout;
-    var player2Msg = {
-        id: bout.id,
-        player1: bout.player2,
-        player2: bout.player1,
-        sentence: bout.sentence
-    };
-
-    io.sockets.connected[player1.id].emit('boutStarted', player1Msg);
-    io.sockets.connected[player2.id].emit('boutStarted', player2Msg);
-}
+// function startBout(player1Id, player2Id) {
+//     console.log("startBout");
+//     var player1 = clientsService.getById(player1Id);
+//     var player2 = clientsService.getById(player2Id);
+//
+//     var bout = boutsService.create(player1, player2, sentenceService.get());
+//
+//     var player1Msg = bout;
+//     var player2Msg = {
+//         id: bout.id,
+//         player1: bout.player2,
+//         player2: bout.player1,
+//         sentence: bout.sentence
+//     };
+//
+//     io.sockets.connected[player1.id].emit('boutStarted', player1Msg);
+//     io.sockets.connected[player2.id].emit('boutStarted', player2Msg);
+// }
 
 function logSocketMsg(msgTitle) {
     console.log('received socket message: **' + msgTitle + '**');

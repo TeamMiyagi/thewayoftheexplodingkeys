@@ -68,5 +68,5 @@ module.exports.remove = removeClient;
 module.exports.clients = getClients;
 module.exports.getById = getClientById;
 module.exports.getWaitingClient = getWaitingClient;
-module.exports.setStatusById = setClientStatusById;
+module.exports.setClientStatusById = setClientStatusById;
 module.exports.doesPlayerAlreadyExist = doesPlayerAlreadyExist;
