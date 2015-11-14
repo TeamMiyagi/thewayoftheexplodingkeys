@@ -26,9 +26,9 @@ function getWaitingClient() {
 }
 
 // TODO: make this by id
-function removeClient(socket) {
+function removeClient(socket_id) {
     console.log('clients before: ', connectedClients);
-    delete connectedClients[socket.id];
+    delete connectedClients[socket_id];
     console.log('clients after: ', connectedClients);
 }
 
