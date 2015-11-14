@@ -18,9 +18,15 @@ function disconnectUser(socket_id) {
     clientsService.remove(socket_id);
 }
 
-function addPlayer(playerName, socket_id) {
-    playersService.add(playerName);
-    clientsService.add(playerName, socket_id);
+function addPlayer(playerName, socket_id, onSuccess, onError) {
+    if (doesPlayerAlreadyExist(playerName)) {
+        onError();
+    }
+    else {
+        playersService.add(playerName);
+        clientsService.add(playerName, socket_id);
+        onSuccess(socket_id, playerName);
+    }
 }
 
 function doesPlayerAlreadyExist(playerName) {
@@ -44,8 +50,8 @@ function startBout(player1_id, player2_id) {
     clientsService.setClientStatusById(player1_id, "fighting");
     clientsService.setClientStatusById(player2_id, "fighting");
 
-    var player1 = clientsService.getById(player1Id);
-    var player2 = clientsService.getById(player2Id);
+    var player1 = clientsService.getById(player1_id);
+    var player2 = clientsService.getById(player2_id);
     return boutsService.create(player1, player2, 'wax on, wax off'/*sentenceService.get()*/);
 }
 
@@ -62,7 +68,7 @@ function stubbedFunction(functionName) {
 // Exported accessors
 module.exports.clients = getClients;
 module.exports.status = getStatus;
-module.exports.doesPlayerAlreadyExist = doesPlayerAlreadyExist;
+// module.exports.doesPlayerAlreadyExist = doesPlayerAlreadyExist;
 module.exports.playerStats = getPlayerStats;
 module.exports.findOpponent = findOpponent;
 
