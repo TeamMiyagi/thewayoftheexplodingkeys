@@ -25,7 +25,7 @@ function addPlayer(playerName, socket_id, onSuccess, onError) {
     else {
         playersService.add(playerName);
         clientsService.add(playerName, socket_id);
-        onSuccess(socket_id, playerName);
+        onSuccess(socket_id, playerName, getPlayerStats(playerName));
     }
 }
 
@@ -36,6 +36,7 @@ function doesPlayerAlreadyExist(playerName) {
 
 function getPlayerStats(playerName) {
     stubbedFunction('getPlayerStats');
+    return {};
 }
 
 function findOpponent() {
@@ -68,8 +69,6 @@ function stubbedFunction(functionName) {
 // Exported accessors
 module.exports.clients = getClients;
 module.exports.status = getStatus;
-// module.exports.doesPlayerAlreadyExist = doesPlayerAlreadyExist;
-module.exports.playerStats = getPlayerStats;
 module.exports.findOpponent = findOpponent;
 
 //////////////////////////////////

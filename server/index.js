@@ -46,6 +46,11 @@ io.on('connection', function (socket) {
     console.log('User connected');
     theSocket = socket;
 
+    socket.on('error', function(error) {
+        console.log('ERROR! ERROR! ERROR! ABORTING!');
+        console.log(error);
+    });
+
     socket.on('disconnect', function() {
         logSocketMsg('User disconnected');
         gameService.disconnectUser(socket.id);
@@ -121,20 +126,17 @@ function updateStatsForPlayers(boutId) {
     // TODO
 }
 
-function createLoggedInEvent(playerId, playerName) {
-    return {
+function handlePlayerAdded(playerId, playerName, playerStats) {
+    var loggedInEvent = {
         type: 'loggedIn',   // probably not used
         success: true,
         player: {
             id: playerId,
             name: playerName,
-            stats: gameService.playerStats(playerName)
+            stats: playerStats
         }
     };
-}
-
-function handlePlayerAdded(socket_id, playerName) {
-    theSocket.emit('loginEvent', createLoggedInEvent(socket_id, playerName));
+    theSocket.emit('loginEvent', loggedInEvent);
 }
 
 function handlePlayerNotAdded() {
