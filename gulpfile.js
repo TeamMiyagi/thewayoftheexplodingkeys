@@ -5,6 +5,7 @@ var babelify = require('babelify');
 var babel = require('babel/register');
 var uglify = require('gulp-uglify');
 var jshint = require('gulp-jshint');
+var jasmine = require('gulp-jasmine');
 
 var paths = {
     client: ['client/js/game/*.js']
@@ -23,17 +24,27 @@ gulp.task('css', function() {
         .pipe(gulp.dest('./public/css'));
 })
 
-gulp.task('jshint', function() {
-    gulp.src('./server/**/*.js')
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'));
-
+gulp.task('jshint-client', function() {
     gulp.src('./client/js/game/**/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 })
 
-gulp.task('build-client', ['jshint', 'copy-client', 'css'], function() {
+gulp.task('jshint-server', function() {
+    gulp.src('./server/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+    gulp.src('./server/gameservice/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+})
+
+gulp.task('test-server', function() {
+    return gulp.src('server/gameservice/spec/GameServiceSpec.js')
+        .pipe(jasmine());
+})
+
+gulp.task('build-client', ['jshint-client', 'copy-client', 'css'], function() {
     var b = browserify();
 
     b.transform(babelify);
@@ -44,8 +55,10 @@ gulp.task('build-client', ['jshint', 'copy-client', 'css'], function() {
             .pipe(gulp.dest('./public/js/'));
 });
 
+gulp.task('build-server', ['jshint-server', 'test-server'], function() {});
+
 gulp.task('watch', function() {
     gulp.watch(paths.client, ['build-client']);
 });
 
-gulp.task('default', ['build-client'], function() {});
+gulp.task('default', ['build-client', 'build-server'], function() {});
