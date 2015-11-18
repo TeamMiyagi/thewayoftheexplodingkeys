@@ -67,9 +67,9 @@ function stubbedFunction(functionName) {
 
 //////////////////////////////////
 // Exported accessors
-module.exports.clients = getClients;
-module.exports.status = getStatus;
-module.exports.findOpponent = findOpponent;
+module.exports.clients = getClients;    // returns a map of clients. Keys are the players name.
+module.exports.status = getStatus;      // returns HTML
+module.exports.findOpponent = findOpponent; // returns client object or null
 
 //////////////////////////////////
 // Exported mutators

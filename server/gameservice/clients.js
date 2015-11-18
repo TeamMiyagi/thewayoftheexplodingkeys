@@ -13,7 +13,7 @@ function addClient(playerName, socket_id) {
 }
 
 function getWaitingClient() {
-    var opponent;
+    var opponent = null;
     Object.keys(connectedClients).forEach(function(clientId) {
         var client = connectedClients[clientId];
         if (client.status === "findingMatch") {
