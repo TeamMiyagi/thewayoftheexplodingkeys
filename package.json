@@ -37,6 +37,8 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "devDependencies": {
-    "gulp-jshint": "^1.11.2"
+    "gulp-jasmine": "^2.2.1",
+    "gulp-jshint": "^1.11.2",
+    "jasmine": "^2.3.2"
   }
 }

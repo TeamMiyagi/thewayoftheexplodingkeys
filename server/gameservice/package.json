@@ -1,0 +1,14 @@
+{
+  "name": "gameservice",
+  "version": "1.0.0",
+  "description": "Encapsulates main server logic.",
+  "main": "gameservice.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Team Miyagi",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^2.3.2"
+  }
+}

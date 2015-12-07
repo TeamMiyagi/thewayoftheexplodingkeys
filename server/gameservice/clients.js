@@ -1,20 +1,19 @@
 var connectedClients = {};
 
-// TODO: make this by ID
-function addClient(playerName, socket) {
+function addClient(playerName, socket_id) {
     var client = {
         name: playerName,
-        id: socket.id,
+        id: socket_id,
         status: 'idle'
     };
 
-    connectedClients[socket.id] = client;
+    connectedClients[socket_id] = client;
 
     console.log(connectedClients);
 }
 
 function getWaitingClient() {
-    var opponent;
+    var opponent = null;
     Object.keys(connectedClients).forEach(function(clientId) {
         var client = connectedClients[clientId];
         if (client.status === "findingMatch") {
@@ -26,9 +25,9 @@ function getWaitingClient() {
 }
 
 // TODO: make this by id
-function removeClient(socket) {
+function removeClient(socket_id) {
     console.log('clients before: ', connectedClients);
-    delete connectedClients[socket.id];
+    delete connectedClients[socket_id];
     console.log('clients after: ', connectedClients);
 }
 
@@ -69,5 +68,5 @@ module.exports.remove = removeClient;
 module.exports.clients = getClients;
 module.exports.getById = getClientById;
 module.exports.getWaitingClient = getWaitingClient;
-module.exports.setStatusById = setClientStatusById;
+module.exports.setClientStatusById = setClientStatusById;
 module.exports.doesPlayerAlreadyExist = doesPlayerAlreadyExist;
