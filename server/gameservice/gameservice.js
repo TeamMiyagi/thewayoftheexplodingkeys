@@ -30,13 +30,15 @@ function addPlayer(playerName, socket_id, onSuccess, onError) {
 }
 
 function doesPlayerAlreadyExist(playerName) {
-    stubbedFunction('doesPlayerAlreadyExist');
-    return false;
+    return clientsService.doesPlayerAlreadyExist(playerName);
 }
 
 function getPlayerStats(playerName) {
-    stubbedFunction('getPlayerStats');
-    return {};
+    return {
+        gamesPlayed: 0,
+        gamesWon: 0,
+        gamesLost: 0
+    };
 }
 
 function findOpponent() {
@@ -68,7 +70,7 @@ function stubbedFunction(functionName) {
 //////////////////////////////////
 // Exported accessors
 module.exports.clients = getClients;    // returns a map of clients. Keys are the players name.
-module.exports.status = getStatus;      // returns HTML
+module.exports.status = getStatus;      // returns object with info such as number of wins/losses
 module.exports.findOpponent = findOpponent; // returns client object or null
 
 //////////////////////////////////
