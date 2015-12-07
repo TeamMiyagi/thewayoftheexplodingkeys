@@ -61,4 +61,6 @@ gulp.task('watch', function() {
     gulp.watch(paths.client, ['build-client']);
 });
 
+gulp.task('test', ['jshint-client', 'jshint-server', 'test-server'], function () {});
+
 gulp.task('default', ['build-client', 'build-server'], function() {});

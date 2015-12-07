@@ -4,7 +4,7 @@
   "description": "The Way of the Exploding Keys",
   "main": "server/index.js",
   "scripts": {
-    "test": "echo \"Everything is working fine!\""
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
