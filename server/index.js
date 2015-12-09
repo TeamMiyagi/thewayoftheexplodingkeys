@@ -8,7 +8,6 @@ var ip = require('ip').address();
 // var boutsService = require('./bouts-service');
 // var playersService = require('./players-service');
 var gameService = require('./gameservice');
-var theSocket;
 console.log(gameService);
 
 
@@ -44,7 +43,6 @@ server = http.listen(3000, function() {
 
 io.on('connection', function (socket) {
     console.log('User connected');
-    theSocket = socket;
 
     socket.on('error', function(error) {
         console.log('ERROR! ERROR! ERROR! ABORTING!');
@@ -58,7 +56,7 @@ io.on('connection', function (socket) {
 
     socket.on('new-player', function(playerName) {
         logSocketMsg('new-player');
-        gameService.addPlayer(playerName, socket.id, handlePlayerAdded, handlePlayerNotAdded);
+        gameService.addPlayer(playerName, socket.id, handlePlayerAdded(socket), handlePlayerNotAdded(socket));
     });
 
     socket.on('findMatch', function() {
@@ -126,21 +124,25 @@ function updateStatsForPlayers(boutId) {
     // TODO
 }
 
-function handlePlayerAdded(playerId, playerName, playerStats) {
-    var loggedInEvent = {
-        type: 'loggedIn',   // probably not used
-        success: true,
-        player: {
-            id: playerId,
-            name: playerName,
-            stats: playerStats
-        }
+function handlePlayerAdded(socket) {
+    return function(playerId, playerName, playerStats) {
+        var loggedInEvent = {
+            type: 'loggedIn',   // probably not used
+            success: true,
+            player: {
+                id: playerId,
+                name: playerName,
+                stats: playerStats
+            }
+        };
+        socket.emit('loginEvent', loggedInEvent);
     };
-    theSocket.emit('loginEvent', loggedInEvent);
 }
 
-function handlePlayerNotAdded() {
-    theSocket.emit('loginEvent', { success: false });
+function handlePlayerNotAdded(socket) {
+    return function() {
+        socket.emit('loginEvent', { success: false });
+    };
 }
 
 
