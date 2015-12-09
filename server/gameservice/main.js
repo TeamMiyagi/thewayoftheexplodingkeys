@@ -1,21 +1,21 @@
 var sentenceService = require('../sentenceservice');
-var clientsService = require('./clients');
-var boutsService = require('./bouts');
-var playersService = require('./players');
+var clients = require('./clients');
+var bouts = require('./bouts');
+var players = require('./players');
 var statusBuilder = require('./statusbuilder');
 
 function getClients() {
-    return clientsService.clients();
+    return clients.clients();
 }
 
 function getStatus() {
     return statusBuilder.generateStatus(
-        clientsService.clients(), boutsService.bouts());
+        clients.clients(), bouts.bouts());
 }
 
 function disconnectUser(socket_id) {
-    boutsService.deleteBouts(socket_id);
-    clientsService.remove(socket_id);
+    bouts.deleteBouts(socket_id);
+    clients.remove(socket_id);
 }
 
 function addPlayer(playerName, socket_id, onSuccess, onError) {
@@ -23,14 +23,14 @@ function addPlayer(playerName, socket_id, onSuccess, onError) {
         onError();
     }
     else {
-        playersService.add(playerName);
-        clientsService.add(playerName, socket_id);
+        players.add(playerName);
+        clients.add(playerName, socket_id);
         onSuccess(socket_id, playerName, getPlayerStats(playerName));
     }
 }
 
 function doesPlayerAlreadyExist(playerName) {
-    return clientsService.doesPlayerAlreadyExist(playerName);
+    return clients.doesPlayerAlreadyExist(playerName);
 }
 
 function getPlayerStats(playerName) {
@@ -42,20 +42,20 @@ function getPlayerStats(playerName) {
 }
 
 function findOpponent() {
-    return clientsService.getWaitingClient();
+    return clients.getWaitingClient();
 }
 
 function setClientStatus(socket_id, status) {
-    clientsService.setClientStatusById(socket_id, status);
+    clients.setClientStatusById(socket_id, status);
 }
 
 function startBout(player1_id, player2_id) {
-    clientsService.setClientStatusById(player1_id, "fighting");
-    clientsService.setClientStatusById(player2_id, "fighting");
+    clients.setClientStatusById(player1_id, "fighting");
+    clients.setClientStatusById(player2_id, "fighting");
 
-    var player1 = clientsService.getById(player1_id);
-    var player2 = clientsService.getById(player2_id);
-    return boutsService.create(player1, player2, sentenceService.get());
+    var player1 = clients.getById(player1_id);
+    var player2 = clients.getById(player2_id);
+    return bouts.create(player1, player2, sentenceService.get());
 }
 
 
