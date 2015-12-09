@@ -1,9 +1,11 @@
+var _ = require('lodash');
+
 describe('The Game Service', function() {
     var service = require('../../gameservice');
 
     describe('on initialisation', function() {
         it('starts with no clients', function() {
-            var clientKeys = Object.keys(service.clients());
+            var clientKeys = _.keys(service.clients());
             expect(clientKeys.length).toBe(0);
         });
 
@@ -20,7 +22,7 @@ describe('The Game Service', function() {
             service.addPlayer('p1', 1, onAddPlayerSuccess, function() {});
 
             expect(numOfPlayersConnected).toBe(1);
-            var clientKeys = Object.keys(service.clients());
+            var clientKeys = _.keys(service.clients());
             expect(clientKeys.length).toBe(1);
         });
     });
@@ -43,14 +45,14 @@ describe('The Game Service', function() {
         it('player can disconnect and there will be no connected clients', function() {
             service.disconnectUser(1);
 
-            var clientKeys = Object.keys(service.clients());
+            var clientKeys = _.keys(service.clients());
             expect(clientKeys.length).toBe(0);
         });
 
         it ('cannot add another player with the same name', function() {
             service.addPlayer('p1', 2, onAddPlayerSuccess, onAddPlayerError);
 
-            var clientKeys = Object.keys(service.clients());
+            var clientKeys = _.keys(service.clients());
             expect(clientKeys.length).toBe(1);
         });
     });
