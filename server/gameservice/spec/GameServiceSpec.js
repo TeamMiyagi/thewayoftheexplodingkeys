@@ -1,7 +1,9 @@
 var _ = require('lodash');
+var service = require('../../gameservice');
 
 describe('The Game Service', function() {
-    var service = require('../../gameservice');
+    var onAddPlayerError = function() {};
+    var onAddPlayerSuccess = function() {};
 
     describe('on initialisation', function() {
         it('starts with no clients', function() {
@@ -28,14 +30,9 @@ describe('The Game Service', function() {
     });
 
     describe('with one player already connected', function() {
-        var numOfPlayersConnected = 0;
-        var onAddPlayerSuccess = function() {
-            numOfPlayersConnected++;
-        };
-        var onAddPlayerError = function() {};
 
         beforeEach(function() {
-            service.addPlayer('p1', 1, onAddPlayerSuccess, function() {});
+            service.addPlayer('p1', 1, onAddPlayerSuccess, onAddPlayerError);
         });
 
         it('player can try to find an opponent', function() {
@@ -58,13 +55,28 @@ describe('The Game Service', function() {
     });
 
     describe('with two players already connected', function() {
-        xit('both players are known and idle', function() {
+
+        beforeEach(function () {
+            service.addPlayer('p1', 1, onAddPlayerSuccess, onAddPlayerError);
+            service.addPlayer('p2', 2, onAddPlayerSuccess, onAddPlayerError);
+        });
+
+        it('both players are known and idle', function() {
+            expect(service.clients()['1']).toBeDefined();
+            expect(service.clients()['1'].status).toBe('idle');
+            expect(service.clients()['2']).toBeDefined();
+            expect(service.clients()['2'].status).toBe('idle');
         });
 
         xit('players can start a bout', function() {
         });
 
+        xit('player1 is quicker than player2 then player2 lose life', function() {
+
+        });
+
         xit('bout ended if player 1 disconnects', function() {
         });
+
     });
 });

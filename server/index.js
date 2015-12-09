@@ -80,7 +80,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('roundComplete', function(roundCompleteMsg) {
-        logSocketMsg('new-player');
+        logSocketMsg('roundComplete');
         // console.log('roundComplete: ' + roundCompleteMsg);
         gameService.updateBoutStatus(socket.id, roundCompleteMsg);
         // was: boutsService.update(socket.id, roundCompleteMsg);
