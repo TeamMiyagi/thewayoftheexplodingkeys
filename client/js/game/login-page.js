@@ -66,8 +66,8 @@ function startGame() {
 
 function handleLogin(response) {
     console.log('handleLogin. response = ' + JSON.stringify(response));
-    playerId = response.player.id;
     if (response.success) {
+        playerId = response.player.id;
         $('#welcomeDiv').hide();
         $('#playerName').text(response.player.name);
         $('#startGameDiv').show();
