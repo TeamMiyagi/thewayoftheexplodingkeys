@@ -1,4 +1,4 @@
-var sentenceService = require('../sentence-service'); // TODO: needs moving
+var sentenceService = require('../sentenceservice/main'); // TODO: needs moving
 var clientsService = require('./clients');
 var boutsService = require('./bouts');
 var playersService = require('./players');
@@ -55,7 +55,7 @@ function startBout(player1_id, player2_id) {
 
     var player1 = clientsService.getById(player1_id);
     var player2 = clientsService.getById(player2_id);
-    return boutsService.create(player1, player2, 'wax on, wax off'/*sentenceService.get()*/);
+    return boutsService.create(player1, player2, sentenceService.get());
 }
 
 
