@@ -1,4 +1,4 @@
-var sentenceService = require('../sentenceservice/main'); // TODO: needs moving
+var sentenceService = require('../sentenceservice');
 var clientsService = require('./clients');
 var boutsService = require('./bouts');
 var playersService = require('./players');
