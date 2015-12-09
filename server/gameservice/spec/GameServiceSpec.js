@@ -62,9 +62,7 @@ describe('The Game Service', function() {
         });
 
         it('both players are known and idle', function() {
-            expect(service.clients()['1']).toBeDefined();
             expect(service.clients()['1'].status).toBe('idle');
-            expect(service.clients()['2']).toBeDefined();
             expect(service.clients()['2'].status).toBe('idle');
         });
 
