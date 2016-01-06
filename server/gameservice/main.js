@@ -58,6 +58,21 @@ function startBout(player1_id, player2_id) {
     return bouts.create(player1, player2, sentenceService.get());
 }
 
+function updateBoutStatus(id, roundCompleteMsg) {
+    bouts.update(id, roundCompleteMsg);
+}
+
+function getRoundStatus(boutId) {
+    return bouts.getRoundStatus(boutId);
+}
+
+function getBout(boutId) {
+    return bouts.get(boutId);
+}
+
+function resetBout(bout, sentence) {
+    bouts.resetBout(bout, sentence);
+}
 
 
 //////////////////////////////////
@@ -79,3 +94,7 @@ module.exports.disconnectUser = disconnectUser;
 module.exports.addPlayer = addPlayer;
 module.exports.setClientStatus = setClientStatus;
 module.exports.startBout = startBout;
+module.exports.updateBoutStatus = updateBoutStatus;
+module.exports.getRoundStatus = getRoundStatus;
+module.exports.getBout = getBout;
+module.exports.resetBout = resetBout;

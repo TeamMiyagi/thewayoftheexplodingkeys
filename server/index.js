@@ -1,10 +1,20 @@
+/*
+index.js - HTTP/HTML/WebSocket adaptor for the game service
+
+The intention is that the client uses index.js but all game logic
+is in gameservice. index.js is therefore the adaptor around the
+game service that deals with HTTP requests (using express), web sockets
+(using socket.io) and HTML.
+*/
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ip = require('ip').address();
 var gameService = require('./gameservice');
+// var sentenceService = require('/sentenceservice');
 console.log(gameService);
+// console.log(sentenceservice);
 
 
 app.use(express.static(__dirname + '/../client'));
@@ -24,11 +34,11 @@ app.get('/ip', function(req, res) {
 });
 
 app.get('/clients', function(req, res) {
-    res.json(gameService.clients()); // was res.json(clientsService.clients());
+    res.json(gameService.clients());
 });
 
 app.get('/status', function(req, res) {
-    res.send(gameService.status()); // was res.send(generateStatus());
+    res.send(gameService.status());
 });
 
 server = http.listen(3000, function() {
@@ -81,17 +91,14 @@ io.on('connection', function (socket) {
 
     socket.on('roundComplete', function(roundCompleteMsg) {
         logSocketMsg('roundComplete');
-        // console.log('roundComplete: ' + roundCompleteMsg);
         gameService.updateBoutStatus(socket.id, roundCompleteMsg);
-        // was: boutsService.update(socket.id, roundCompleteMsg);
 
         // TODO!
-        var roundStatus = boutsService.getRoundStatus(roundCompleteMsg.id);
+        var roundStatus = gameService.getRoundStatus(roundCompleteMsg.id);
         if (roundStatus.isComplete) {
-            console.log('Round complete!');
             updateStatsForPlayers(roundCompleteMsg.id);
-            var bout = boutsService.get(roundCompleteMsg.id);
-            boutsService.resetBout(bout, sentenceService.get());
+            var bout = gameService.getBout(roundCompleteMsg.id);
+            gameService.resetBout(bout, "ABCD");
             io.sockets.connected[bout.player1.id].emit('roundResult', {
                 didYouWin: roundStatus.player1Won,
                 nextBout: bout
