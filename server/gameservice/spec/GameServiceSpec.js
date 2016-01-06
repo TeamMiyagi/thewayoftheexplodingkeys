@@ -1,5 +1,7 @@
 var _ = require('lodash');
 var service = require('../../gameservice');
+var sentenceService = require('../../sentenceservice');
+var clients = require('../../gameservice/clients');
 
 describe('The Game Service', function() {
     var onAddPlayerError = function() {};
@@ -66,7 +68,43 @@ describe('The Game Service', function() {
             expect(service.clients()['2'].status).toBe('idle');
         });
 
-        xit('players can start a bout', function() {
+        it('players can start a bout', function() {
+          var sentence = 'sentence';
+          spyOn(sentenceService, 'get').and.returnValue(sentence);
+          spyOn(clients, 'getById').and.callFake(function(id) {
+            if (id === 1) {
+              return {
+                  name: 'Player 1',
+                  id: 1,
+                  status: 'fighting'
+              }
+            } else if (id === 2) {
+              return {
+                  name: 'Player 2',
+                  id: 2,
+                  status: 'fighting'
+              }
+            }
+          });
+          var bout = service.startBout(1, 2);
+
+          expect(service.clients()['1'].status).toBe('fighting');
+          expect(service.clients()['2'].status).toBe('fighting');
+          expect(bout).toEqual(jasmine.objectContaining({
+            player1: {
+              name: 'Player 1',
+              id: 1,
+              status: 'fighting',
+              lives: 3
+            },
+            player2: {
+              name: 'Player 2',
+              id: 2,
+              status: 'fighting',
+              lives: 3
+            },
+            sentence: sentence
+          }));
         });
 
         xit('player1 is quicker than player2 then player2 lose life', function() {
