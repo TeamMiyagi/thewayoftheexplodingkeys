@@ -12,9 +12,9 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ip = require('ip').address();
 var gameService = require('./gameservice');
-// var sentenceService = require('/sentenceservice');
+var sentenceService = require('./sentenceservice');
 console.log(gameService);
-// console.log(sentenceservice);
+console.log(sentenceService);
 
 
 app.use(express.static(__dirname + '/../client'));
@@ -98,7 +98,7 @@ io.on('connection', function (socket) {
         if (roundStatus.isComplete) {
             updateStatsForPlayers(roundCompleteMsg.id);
             var bout = gameService.getBout(roundCompleteMsg.id);
-            gameService.resetBout(bout, "ABCD");
+            gameService.resetBout(bout, sentenceService.get());
             io.sockets.connected[bout.player1.id].emit('roundResult', {
                 didYouWin: roundStatus.player1Won,
                 nextBout: bout
