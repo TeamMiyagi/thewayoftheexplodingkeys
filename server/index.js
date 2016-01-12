@@ -25,7 +25,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/ip', function(req, res) {
-    var env = process.env.NODE_ENV;
+    var env = getEnvironment();
     var ipToReturn = ip;
     if (!env || env !== 'local') {
         ipToReturn = '52.17.219.89';
@@ -43,6 +43,8 @@ app.get('/status', function(req, res) {
 
 server = http.listen(3000, function() {
     var port = server.address().port;
+    var environment = getEnvironment();
+    console.log('Environment: %s', environment);
     console.log('TWOTEK app is listening at %s', port);
 });
 
@@ -148,6 +150,9 @@ function handlePlayerNotAdded(socket) {
     };
 }
 
+function getEnvironment() {
+    return process.env.NODE_ENV || 'production';
+}
 
 function logSocketMsg(msgTitle) {
     console.log('received socket message: **' + msgTitle + '**');

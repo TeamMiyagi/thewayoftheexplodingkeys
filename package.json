@@ -4,6 +4,7 @@
   "description": "The Way of the Exploding Keys",
   "main": "server/index.js",
   "scripts": {
+    "start": "NODE_ENV='local' node server/index.js",
     "test": "gulp test"
   },
   "repository": {
